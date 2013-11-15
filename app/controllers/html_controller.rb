@@ -22,25 +22,31 @@ class HtmlController < CompilerController
   end
 
   def retrieve_source
-    source = File.open("my/file/path", "r")
   end
 
   def find_style_declarations
+    style_blocks = {}
     style_block_open = false
 
-    file.each_line do |line|
-      if line =~ /\<style/
+    source = "doc/homebrewed/file.html"
+
+    lines_for_source_file = File.foreach(source).map(&:to_s)
+
+    lines_for_source_file.each_with_index do |line, index|
+      next unless line =~ /\<style/
         style_block_open = true
         # if this line contains (not begins with, just contains)
         # "<style", copy that line all the way to the end of the tag
         # push the entire string into the first index of an array
-      elsif line =~ /\<\/style/
-        style_block_open = false
-        # If the next line contains "</style", this is the last line.
-        # Take all the contents of this line up until the tag closes
-        # and push it into the next index of that array.
-        # Close this json object, and move onto the next one.
-        # (style_block_open = false)
+
+        if line =~ /\<\/style/
+          style_block_open = false
+          # If the next line contains "</style", this is the last line.
+          # Take all the contents of this line up until the tag closes
+          # and push it into the next index of that array.
+          # Close this json object, and move onto the next one.
+          # (style_block_open = false)
+        end
       end
 
       # Otherwise, if this line does not qualify as a "beginning"
