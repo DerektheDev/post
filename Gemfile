@@ -27,7 +27,14 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+
+
 gem 'awesome_print'
+# gem 'crass'		# css parser
+gem 'csspool'	# another css parser
+gem 'nokogiri'	# html parser
+# gem 'hpricot' # another option for html parsing?
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
