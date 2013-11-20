@@ -28,7 +28,13 @@ GEM
     arel (4.0.1)
     atomic (1.1.14)
     awesome_print (1.2.0)
+    better_errors (1.0.1)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     builder (3.1.4)
+    coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -36,9 +42,12 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
-    crass (0.2.0)
+    csspool (3.0.2)
+    debug_inspector (0.0.2)
     erubis (2.7.0)
     execjs (2.0.2)
+    haml (4.0.4)
+      tilt
     hike (1.2.3)
     i18n (0.6.5)
     jbuilder (1.5.2)
@@ -59,6 +68,7 @@ GEM
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     polyglot (0.3.3)
+    racc (1.4.10)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -78,6 +88,7 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    rexical (1.0.5)
     sass (3.2.12)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -114,13 +125,18 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
+  better_errors
+  binding_of_caller
   coffee-rails (~> 4.0.0)
-  crass
+  csspool
+  haml
   jbuilder (~> 1.2)
   jquery-rails
   mysql2
   nokogiri
+  racc
   rails (= 4.0.1)
+  rexical
   sass-rails (~> 4.0.0)
   sdoc
   turbolinks

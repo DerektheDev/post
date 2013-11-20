@@ -1,12 +1,16 @@
 class HtmlController < CompilerController
 
+  def index
+    source_path = "doc/homebrewed/file.html"
+  end
+
   def compile
     # grab the uploaded file
-    file = retrieve_source
+    # file = retrieve_source
 
     # fetch stylesheets (style tags, both in-doc and external
     # in the order they are declared
-    find_style_declarations
+    # find_style_declarations
 
     # compress them into one block of text
 
@@ -22,42 +26,6 @@ class HtmlController < CompilerController
   end
 
   def retrieve_source
-  end
-
-  def find_style_declarations
-    style_blocks = {}
-    style_block_open = false
-
-    source = "doc/homebrewed/file.html"
-
-    lines_for_source_file = File.foreach(source).map(&:to_s)
-
-    lines_for_source_file.each_with_index do |line, index|
-      next unless line =~ /\<style/
-        style_block_open = true
-        # if this line contains (not begins with, just contains)
-        # "<style", copy that line all the way to the end of the tag
-        # push the entire string into the first index of an array
-
-        if line =~ /\<\/style/
-          style_block_open = false
-          # If the next line contains "</style", this is the last line.
-          # Take all the contents of this line up until the tag closes
-          # and push it into the next index of that array.
-          # Close this json object, and move onto the next one.
-          # (style_block_open = false)
-        end
-      end
-
-      # Otherwise, if this line does not qualify as a "beginning"
-      # or an "end" to a style tag, but we have not yet reached
-      # the end of the style tag block (style_block_open), this is
-      # a CSS rule. Pass this line into the array of lines to
-      # qualify as a CSS rule.
-
-      # Finally, if the line does not fall in between two style blocks
-      # (style_block_open = false), ignore it. Move onto the next bit.
-    end
   end
 
 end

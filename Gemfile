@@ -6,20 +6,15 @@ gem 'rails', '4.0.1'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
-
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
-
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+#
+# ASSETS
+gem 'sass-rails', '~> 4.0.0' 	# Use SCSS for stylesheets
+gem 'uglifier', '>= 1.3.0'		# Use Uglifier as compressor for JavaScript assets
+gem 'coffee-rails', '~> 4.0.0'	# Use CoffeeScript for .js.coffee assets and views
 # gem 'therubyracer', platforms: :ruby
+gem 'jquery-rails'				# Use jquery as the JavaScript library
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
+
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -27,18 +22,31 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-
-
+#
+# My Toolkit =)
 gem 'awesome_print'
+gem 'haml'
+
+#
+# COMPILER GEMS
 # gem 'crass'		# css parser
 gem 'csspool'	# another css parser
+	gem 'racc'		# required...
+	gem 'rexical' 	# ...by csspool
 gem 'nokogiri'	# html parser
 # gem 'hpricot' # another option for html parsing?
+
+# gem 'tamtam' # apparently does everything for you already
 
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
+end
+
+group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 # Use ActiveModel has_secure_password
