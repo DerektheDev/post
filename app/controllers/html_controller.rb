@@ -1,7 +1,10 @@
 class HtmlController < CompilerController
 
   def index
-    source_path = "doc/homebrewed/file.html"
+    source_path = "app/views/html/example_email.html"
+    source_file = File.open(source_path, 'r')
+    contents = source_file.read
+    @input_file = CodeRay.scan(contents, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
   def compile

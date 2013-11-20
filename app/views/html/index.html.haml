@@ -1,3 +1,8 @@
-%h1 Test!
-
-=render 'example_email'
+.container
+  %nav.navbar.navbar-default{role: :navigation}
+    .navbar-header
+      =link_to 'XD Mail Compiler', '#', class: 'navbar-brand'
+  .row
+    .col-sm-6
+      =raw @input_file
+    .col-sm-6
