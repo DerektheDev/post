@@ -30,16 +30,13 @@ gem 'coderay' # syntax colorer
 
 
 #
-# COMPILER GEMS
-# gem 'crass'		# css parser
-gem 'csspool'	# another css parser
-	gem 'racc'		# required...
-	gem 'rexical' 	# ...by csspool
-gem 'nokogiri'	# html parser
-gem 'hpricot' # another option for html parsing?
+# PARSING GEMS
+gem 'csspool'	# css
+gem 'hpricot' # html
 
-# gem 'tamtam' # apparently does everything for you already
-
+# other junk that may be useful later
+# crass, [racc, rexical, (for csspool)],
+# nokogiri, tamtam, premailer
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

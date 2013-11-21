@@ -64,14 +64,10 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25)
-    mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
     mysql2 (0.3.14)
-    nokogiri (1.6.0)
-      mini_portile (~> 0.5.0)
     polyglot (0.3.3)
-    racc (1.4.10)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -91,7 +87,6 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
-    rexical (1.0.5)
     sass (3.2.12)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -142,10 +137,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mysql2
-  nokogiri
-  racc
   rails (= 4.0.1)
-  rexical
   sass-rails (~> 4.0.0)
   sdoc
   thin
