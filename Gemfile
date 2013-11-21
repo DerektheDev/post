@@ -36,7 +36,7 @@ gem 'csspool'	# another css parser
 	gem 'racc'		# required...
 	gem 'rexical' 	# ...by csspool
 gem 'nokogiri'	# html parser
-# gem 'hpricot' # another option for html parsing?
+gem 'hpricot' # another option for html parsing?
 
 # gem 'tamtam' # apparently does everything for you already
 

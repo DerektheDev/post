@@ -1,5 +1,7 @@
 XdMailCompiler::Application.routes.draw do
 
+  root 'html#index'
+  
   resources :html do
     collection do
       get :index
