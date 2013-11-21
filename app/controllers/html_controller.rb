@@ -1,10 +1,34 @@
 class HtmlController < CompilerController
 
   def index
-    source_path = "app/views/html/example_email.html"
-    source_file = File.open(source_path, 'r')
-    contents = source_file.read
-    @input_file = CodeRay.scan(contents, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    src_html_path = "app/views/html/example_email.html"
+    src_html_file = File.open(src_html_path, 'r').read
+    @input_html   = CodeRay.scan(src_html_file, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+
+    src_css_path  = "app/assets/stylesheets/test.css"
+    src_css_file  = File.open(src_css_path, 'r').read
+    @input_css    = CodeRay.scan(src_css_file, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
+
+    html_doc  = Hpricot.parse(File.read(src_html_path))
+    css_doc   = CSSPool.CSS open(src_css_path)
+    output_array = []
+    css_doc.rule_sets.each do |rule_set|
+      rule_set.selectors.each do |selector|
+        elements = html_doc.search(selector)
+        elements.each do |matched_elem|
+          style_array = rule_set.declarations.map{|d| d}
+          matched_elem.set_attribute :style, style_array.join(' ')
+          output_array.push matched_elem
+        end
+      end
+    end
+    @output_html = output_array.join("\n")
+    @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    # p_tag     = html_doc.search('//p').first
+    # css_doc.rules_matching(p_tag).each do |rule|
+    #   p rule
+    # end
+
   end
 
   def compile

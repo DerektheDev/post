@@ -1,9 +1,15 @@
 h1 {
-	font-size:250%;
+  color:red;
+  font-weight: bold;
 }
 h2 {
-	font-size:200%;
+  color:blue;
 }
 p {
-	font-size:100%;
+  color:green;
+}
+
+.some-class #some-id{
+  font-weight: bold;
+  border:1px solid red;
 }
