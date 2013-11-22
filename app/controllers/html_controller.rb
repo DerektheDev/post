@@ -16,7 +16,27 @@ class HtmlController < CompilerController
       rule_set.selectors.each do |selector|
         elements = html_doc.search(selector)
         elements.each do |matched_elem|
-          style_array = rule_set.declarations.map{|d| d}
+          style_array = []
+          if matched_elem.raw_attributes
+            # gather any styles that may already exist
+            # on the element so they are not overwritten
+            ap matched_elem.raw_attributes
+            matched_elem.raw_attributes.each do |declaration|
+              ap declaration
+              if declaration.is_a?(Hash) && declaration.has_key?(:style)
+                # declaration contains ids, classes, and other attributes
+                # only push the style attribute
+                style_array.push declaration[:style].strip
+              elsif declaration.is_a?(Array) && declaration.first.strip == 'style'
+                style_array.push declaration.last.strip
+              end
+            end
+          end
+          rule_set.declarations.each do |declaration|
+            # now add any styles that this particular CSS
+            # declaration block may add
+            style_array.push declaration.to_s.strip
+          end
           matched_elem.set_attribute :style, style_array.join(' ')
           output_array.push matched_elem
         end

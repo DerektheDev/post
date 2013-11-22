@@ -5,6 +5,18 @@ h1 {
 h2 {
   color:blue;
 }
+h2.testclass{
+  background: wheat;
+}
+.hotdog{
+  border: 2px dashed lime;
+}
+#yep{
+  margin-bottom:10em;
+}
+h2#testid{
+  font-style: italic;
+}
 p {
   color:green;
 }
