@@ -31,12 +31,12 @@ gem 'coderay' # syntax colorer
 
 #
 # PARSING GEMS
-gem 'csspool'	# css
-gem 'hpricot' # html
+gem 'csspool'  # css
+gem 'nokogiri' # html
 
 # other junk that may be useful later
 # crass, [racc, rexical, (for csspool)],
-# nokogiri, tamtam, premailer
+# hpricot, tamtam, premailer
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

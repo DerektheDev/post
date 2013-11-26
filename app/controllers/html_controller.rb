@@ -9,46 +9,46 @@ class HtmlController < CompilerController
     src_css_file  = File.open(src_css_path, 'r').read
     @input_css    = CodeRay.scan(src_css_file, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
 
-    html_doc  = Hpricot.parse(File.read(src_html_path))
+    html_doc  = Nokogiri::HTML open(src_html_path)
     css_doc   = CSSPool.CSS open(src_css_path)
+
     output_array = []
     css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
-        elements = html_doc.search(selector)
-        elements.each do |matched_elem|
-          style_array = []
-          if matched_elem.raw_attributes
-            # gather any styles that may already exist
-            # on the element so they are not overwritten
-            ap matched_elem.raw_attributes
-            matched_elem.raw_attributes.each do |declaration|
-              ap declaration
-              if declaration.is_a?(Hash) && declaration.has_key?(:style)
-                # declaration contains ids, classes, and other attributes
-                # only push the style attribute
-                style_array.push declaration[:style].strip
-              elsif declaration.is_a?(Array) && declaration.first.strip == 'style'
-                style_array.push declaration.last.strip
+        # find elements matching this selector
+        elements = html_doc.css(selector.to_s)
+        output_array = []
+        if elements
+          elements.each do |elem|
+            attrs = elem.attributes
+            if attrs.is_a?(Hash)
+              # gather any styles that may already exist
+              # on the element so they are not overwritten
+              if attrs.has_key?(:style)
+                elem[:style] = (elem[:style] + selector.declarations.join(''))
+              else
+                elem[:style] = selector.declarations.join('')
               end
             end
+
+            output_array.each do |pocket, index|
+              if pocket.has_key?(:path) && pocket[:path] == elem[:path]
+                output_array.push {path: elem.path, html: elem.to_html}
+              else
+                output_array[:path] = output_array[:path] + elem.to_html}
+              end
+            end
+            # else
+            #   output_array.push {path: elem.path, html: elem.to_html}
+            # end
           end
-          rule_set.declarations.each do |declaration|
-            # now add any styles that this particular CSS
-            # declaration block may add
-            style_array.push declaration.to_s.strip
-          end
-          matched_elem.set_attribute :style, style_array.join(' ')
-          output_array.push matched_elem
+        else
+          # No matches
         end
       end
     end
     @output_html = output_array.join("\n")
     @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
-    # p_tag     = html_doc.search('//p').first
-    # css_doc.rules_matching(p_tag).each do |rule|
-    #   p rule
-    # end
-
   end
 
   def compile
