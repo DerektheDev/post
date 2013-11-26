@@ -17,7 +17,7 @@ class HtmlController < CompilerController
       rule_set.selectors.each do |selector|
         # find elements matching this selector
         elements = html_doc.css(selector.to_s)
-        output_array = []
+        # output_array = []
         if elements
           elements.each do |elem|
             attrs = elem.attributes
@@ -25,19 +25,23 @@ class HtmlController < CompilerController
               # gather any styles that may already exist
               # on the element so they are not overwritten
               if attrs.has_key?(:style)
-                elem[:style] = (elem[:style] + selector.declarations.join(''))
-              else
-                elem[:style] = selector.declarations.join('')
+                output_array.each do |pocket, index|
+                  if pocket.has_key?(:path) && pocket[:path] == elem[:path]
+                    elem[:style] = (pocket[:declarations] + selector.declarations.join(''))
+                  else
+                    elem[:style] = selector.declarations.join('')
+                  end
+                end
               end
             end
+            output_array.push({
+                      path: elem.path,
+                      html: elem.to_html,
+              declarations: elem[:style]
+            })
 
-            output_array.each do |pocket, index|
-              if pocket.has_key?(:path) && pocket[:path] == elem[:path]
-                output_array.push {path: elem.path, html: elem.to_html}
-              else
-                output_array[:path] = output_array[:path] + elem.to_html}
-              end
-            end
+            ap output_array
+
             # else
             #   output_array.push {path: elem.path, html: elem.to_html}
             # end
@@ -47,7 +51,7 @@ class HtmlController < CompilerController
         end
       end
     end
-    @output_html = output_array.join("\n")
+    @output_html = output_array.map{|pocket| pocket[:html]}.join("\n")
     @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
