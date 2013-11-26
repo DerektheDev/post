@@ -12,45 +12,47 @@ class HtmlController < CompilerController
     html_doc  = Nokogiri::HTML open(src_html_path)
     css_doc   = CSSPool.CSS open(src_css_path)
 
-    output_array = []
+    output_array ||= []
     css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
         # find elements matching this selector
         elements = html_doc.css(selector.to_s)
-        # output_array = []
         if elements
           elements.each do |elem|
             attrs = elem.attributes
-            if attrs.is_a?(Hash)
-              # gather any styles that may already exist
-              # on the element so they are not overwritten
-              if attrs.has_key?(:style)
-                output_array.each do |pocket, index|
-                  if pocket.has_key?(:path) && pocket[:path] == elem[:path]
-                    elem[:style] = (pocket[:declarations] + selector.declarations.join(''))
-                  else
-                    elem[:style] = selector.declarations.join('')
-                  end
+            if attrs.is_a?(Hash) && attrs.has_key?(:style)
+              output_array.each do |pocket, index|
+                # ap pocket[:path]
+                # ap elem[:path]
+                if pocket[:path] == elem.path
+                  elem[:style] = pocket[:declarations] + selector.declarations.join('')
+                  output_array.push({
+                            path: elem.path,
+                            html: elem.to_html,
+                    declarations: elem[:style]
+                  })
                 end
               end
-            end
-            output_array.push({
-                      path: elem.path,
-                      html: elem.to_html,
-              declarations: elem[:style]
-            })
-
-            ap output_array
-
-            # else
-            #   output_array.push {path: elem.path, html: elem.to_html}
-            # end
+            else
+              elem[:style] = selector.declarations.join('')
+              output_array.push({
+                        path: elem.path,
+                        html: elem.to_html,
+                declarations: elem[:style]
+              })
+            end            
           end
         else
           # No matches
         end
       end
     end
+
+=begin
+  What if instead, I push these all into an array, no looping or anything,
+  and then when the loop is done, I can merge all items with the same path.
+=end
+
     @output_html = output_array.map{|pocket| pocket[:html]}.join("\n")
     @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
