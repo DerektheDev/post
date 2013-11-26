@@ -7,7 +7,7 @@ class HtmlController < CompilerController
 
     src_css_path  = "app/assets/stylesheets/test.css"
     src_css_file  = File.open(src_css_path, 'r').read
-    @input_css    = CodeRay.scan(src_html_file, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_css    = CodeRay.scan(src_css_file, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     html_doc  = Nokogiri::HTML open(src_html_path)
     css_doc   = CSSPool.CSS open(src_css_path)
