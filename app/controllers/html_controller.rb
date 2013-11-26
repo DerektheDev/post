@@ -7,53 +7,42 @@ class HtmlController < CompilerController
 
     src_css_path  = "app/assets/stylesheets/test.css"
     src_css_file  = File.open(src_css_path, 'r').read
-    @input_css    = CodeRay.scan(src_css_file, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     html_doc  = Nokogiri::HTML open(src_html_path)
     css_doc   = CSSPool.CSS open(src_css_path)
 
     output_array ||= []
+
     css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
         # find elements matching this selector
-        elements = html_doc.css(selector.to_s)
-        if elements
-          elements.each do |elem|
-            attrs = elem.attributes
-            if attrs.is_a?(Hash) && attrs.has_key?(:style)
-              output_array.each do |pocket, index|
-                # ap pocket[:path]
-                # ap elem[:path]
-                if pocket[:path] == elem.path
-                  elem[:style] = pocket[:declarations] + selector.declarations.join('')
-                  output_array.push({
-                            path: elem.path,
-                            html: elem.to_html,
-                    declarations: elem[:style]
-                  })
-                end
-              end
-            else
-              elem[:style] = selector.declarations.join('')
-              output_array.push({
-                        path: elem.path,
-                        html: elem.to_html,
-                declarations: elem[:style]
-              })
-            end            
+        matched_elems = html_doc.css(selector.to_s)
+        if matched_elems
+          matched_elems.each do |node|
+            # push the found elements into an array
+            output_array.push({
+                  node: node,
+              selector: selector
+            })
           end
-        else
-          # No matches
         end
       end
     end
 
-=begin
-  What if instead, I push these all into an array, no looping or anything,
-  and then when the loop is done, I can merge all items with the same path.
-=end
+    output_array.each do |elem|
+      # find any duplicate elements by DOM path
+      matches = output_array.select{|test| test[:node].path == elem[:node].path}
 
-    @output_html = output_array.map{|pocket| pocket[:html]}.join("\n")
+      # if there are duplicates, collect all their styles into a string
+      composite_styles = matches.map{|match| match[:selector].declarations}.join('').strip
+
+      # set the style attribute to this new string
+      elem[:node][:style] = composite_styles
+    end
+    # finally, delete the duplicates
+    output_array.uniq!{|elem| elem[:node].path}
+
+    @output_html = output_array.map{|pocket| pocket[:node].to_html}.join("\n")
     @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
