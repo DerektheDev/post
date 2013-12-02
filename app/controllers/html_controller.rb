@@ -22,16 +22,12 @@ class HtmlController < CompilerController
             # node path, simply add to its style string. This will prevent
             # styles from being overwritten by the new style declaration block.
             if index_match = dom_output.index{|pocket| pocket[:node].path == node.path}
-              dom_output[index_match][:css] = [dom_output[index_match][:css], selector.declarations].join('')
-              dom_output[index_match][:node][:style] = dom_output[index_match][:css]
+              dom_output[index_match][:css].push selector.declarations
+              dom_output[index_match][:node][:style] = dom_output[index_match][:css].join('').strip
             else
               # but if this is a new DOM element that has not yet been styled
               # then we can push it into the array as such
-              dom_output.push({
-                selector: selector,
-                    node: node,
-                     css: selector.declarations.join('').strip
-              })
+              dom_output.push({ node: node, css: selector.declarations })
             end
           end
         end
