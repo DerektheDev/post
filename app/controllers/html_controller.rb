@@ -27,6 +27,7 @@ class HtmlController < CompilerController
             else
               # but if this is a new DOM element that has not yet been styled
               # then we can push it into the array as such
+              node[:style] = selector.declarations.join('').strip
               dom_output.push({ node: node, css: selector.declarations })
             end
           end
