@@ -9,7 +9,7 @@ class HtmlController < CompilerController
     css_doc       = CSSPool.CSS(open(src_css_path))
     @input_css    = CodeRay.scan(css_doc, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
 
-    output_array ||= []
+    dom_output ||= []
 
     css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
@@ -17,30 +17,28 @@ class HtmlController < CompilerController
         matched_elems = html_doc.css(selector.to_s)
         if matched_elems
           matched_elems.each do |node|
-            # push the found elements into an array
-            output_array.push({
-                  node: node,
-              selector: selector
-            })
+            # create an array of found elements
+            # If we already have an element in this array that has the same
+            # node path, simply add to its style string. This will prevent
+            # styles from being overwritten by the new style declaration block.
+            if index_match = dom_output.index{|pocket| pocket[:node].path == node.path}
+              dom_output[index_match][:css] = [dom_output[index_match][:css], selector.declarations].join('')
+              dom_output[index_match][:node][:style] = dom_output[index_match][:css]
+            else
+              # but if this is a new DOM element that has not yet been styled
+              # then we can push it into the array as such
+              dom_output.push({
+                selector: selector,
+                    node: node,
+                     css: selector.declarations.join('').strip
+              })
+            end
           end
         end
       end
     end
 
-    output_array.each do |elem|
-      # find any duplicate elements by DOM path
-      matches = output_array.select{|test| test[:node].path == elem[:node].path}
-
-      # if there are duplicates, collect all their styles into a string
-      composite_styles = matches.map{|match| match[:selector].declarations}.join('').strip
-
-      # set the style attribute to this new string
-      elem[:node][:style] = composite_styles
-    end
-    # finally, delete the duplicates
-    output_array.uniq!{|elem| elem[:node].path}
-
-    @output_html = output_array.map{|pocket| pocket[:node].to_html}.join("\n")
+    @output_html = dom_output.map{|pocket| pocket[:node].to_html}.join("\n")
     @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
