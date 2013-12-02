@@ -2,15 +2,12 @@ class HtmlController < CompilerController
 
   def index
     src_html_path = "app/views/html/example_email.html"
-    src_html_file = File.open(src_html_path, 'r').read
-    @input_html   = CodeRay.scan(src_html_file, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    html_doc      = Nokogiri::HTML open(src_html_path)
+    @input_html   = CodeRay.scan(html_doc, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     src_css_path  = "app/assets/stylesheets/test.css"
-    src_css_file  = File.open(src_css_path, 'r').read
-    @input_css    = CodeRay.scan(src_css_file, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
-
-    html_doc  = Nokogiri::HTML open(src_html_path)
-    css_doc   = CSSPool.CSS open(src_css_path)
+    css_doc       = CSSPool.CSS(open(src_css_path))
+    @input_css    = CodeRay.scan(css_doc, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     output_array ||= []
 
