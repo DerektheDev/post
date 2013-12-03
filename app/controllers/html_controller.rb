@@ -1,3 +1,0 @@
-class HtmlController < CompilerController
-
-end

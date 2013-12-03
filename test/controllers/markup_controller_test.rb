@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class HtmlControllerTest < ActionController::TestCase
+class MarkupControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -1,0 +1,2 @@
+class MarkupController < CompilerController
+end
