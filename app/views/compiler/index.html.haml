@@ -1,7 +1,8 @@
 .container
   %nav.navbar.navbar-inverse.navbar-default{role: :navigation}
     .navbar-header
-      =link_to 'XD Mail Compiler', '#', class: 'navbar-brand'
+      =link_to '#', class: 'navbar-brand' do
+        =image_tag 'xd-logo-bw.png', height: '30'
   .row
     .col-sm-12
       %h3 Output
