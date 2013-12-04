@@ -2,7 +2,7 @@ class CompilerController < ApplicationController
 
   def index
     compile_styles("app/assets/stylesheets/test.css")
-    compile_markup("app/views/markup/example.html.haml")
+    compile_markup("app/views/compiler/markup/example.html.haml")
   end
 
   def compile_styles doc_path
