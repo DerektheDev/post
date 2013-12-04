@@ -2,18 +2,12 @@ class CompilerController < ApplicationController
 
   def index
     compile_styles("app/assets/stylesheets/test.css")
-    compile_markup(:html, "app/views/markup/example_email.html")
-  end
-
-  def compile_markup filetype, doc_path
-    if File.extname(doc_path) == '.html'
-      send "compile_#{filetype}", doc_path
-    end
+    compile_markup("app/views/markup/example.html.haml")
   end
 
   def compile_styles doc_path
-    extension = File.extname(doc_path).gsub(/\./,'').to_sym
-    rendered_css = case extension
+    input_styles = File.open(doc_path, 'r').read
+    rendered_css = case get_ext(doc_path)
     when :css
       tree = CSSPool.CSS(open(doc_path)).to_css
     when :scss
@@ -26,10 +20,23 @@ class CompilerController < ApplicationController
     end
 
     @css_doc      = CSSPool.CSS(rendered_css)
-    @input_styles = CodeRay.scan(@css_doc, extension).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_styles = CodeRay.scan(input_styles, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
-  def compile_html doc_path
+  def compile_markup doc_path
+
+    input_markup = File.open(doc_path, 'r').read
+
+    tree = case get_ext(doc_path)
+    when :html
+      ap tree = Nokogiri::HTML(open(doc_path))
+    when :haml
+      engine = Haml::Engine.new(input_markup)
+      # http://haml.info/docs/yardoc/file.REFERENCE.html
+      ap engine.render
+      Nokogiri::HTML(engine.render)
+    end
+
     #
     # For media queries, we'll probably have to open the document,
     # quarantine the media queries out of the file (into a separate
@@ -37,15 +44,14 @@ class CompilerController < ApplicationController
     # finished.
     #
 
-    html_doc      = Nokogiri::HTML open(doc_path)
-    @input_markup = CodeRay.scan(html_doc, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_markup = CodeRay.scan(input_markup, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     dom_output ||= []
 
     @css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
         # find elements matching this selector
-        matched_elems = html_doc.css(selector.to_s)
+        matched_elems = tree.css(selector.to_s)
         if matched_elems
           matched_elems.each do |node|
             # create an array of found elements
@@ -68,6 +74,12 @@ class CompilerController < ApplicationController
 
     @output_markup = dom_output.map{|pocket| pocket[:node].to_html}.join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+  end
+
+#############################
+
+  def get_ext doc_path
+    File.extname(doc_path).gsub(/\./,'').to_sym
   end
 
 end
