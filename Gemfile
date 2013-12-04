@@ -11,7 +11,7 @@ gem 'mysql2'
 gem 'sass-rails', '~> 4.0.0' 	# Use SCSS for stylesheets
 gem 'uglifier', '>= 1.3.0'		# Use Uglifier as compressor for JavaScript assets
 gem 'coffee-rails', '~> 4.0.0'	# Use CoffeeScript for .js.coffee assets and views
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 gem 'jquery-rails'				# Use jquery as the JavaScript library
 
 
@@ -28,11 +28,17 @@ gem 'haml'
 gem 'thin'
 gem 'coderay' # syntax colorer
 
-
 #
 # PARSING GEMS
 gem 'csspool'  # css
 gem 'nokogiri' # html
+
+#
+# FRAMEWORK CONVERSION GEMS
+gem 'sass'
+gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
+
+
 
 # other junk that may be useful later
 # crass, [racc, rexical, (for csspool)],

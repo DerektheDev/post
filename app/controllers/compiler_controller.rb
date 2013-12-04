@@ -1,7 +1,7 @@
 class CompilerController < ApplicationController
 
   def index
-    compile_styles(:css, "app/assets/stylesheets/test.css")
+    compile_styles("app/assets/stylesheets/test.css")
     compile_markup(:html, "app/views/markup/example_email.html")
   end
 
@@ -11,11 +11,22 @@ class CompilerController < ApplicationController
     end
   end
 
-  def compile_styles filetype, doc_path
-    if File.extname(doc_path) == '.css'
-      @css_doc   = CSSPool.CSS(open(doc_path))
-      @input_css = CodeRay.scan(@css_doc, :css).div(line_numbers: nil).gsub(/\n/, '<br>')
+  def compile_styles doc_path
+    extension = File.extname(doc_path).gsub(/\./,'').to_sym
+    rendered_css = case extension
+    when :css
+      tree = CSSPool.CSS(open(doc_path)).to_css
+    when :scss
+      tree = Sass::Engine.for_file(doc_path, {})
+      tree.render
+    when :less
+      parser = Less::Parser.new
+      tree = parser.parse(File.open(doc_path, 'r').read)
+      tree.to_css
     end
+
+    @css_doc      = CSSPool.CSS(rendered_css)
+    @input_styles = CodeRay.scan(@css_doc, extension).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
   def compile_html doc_path
@@ -27,7 +38,7 @@ class CompilerController < ApplicationController
     #
 
     html_doc      = Nokogiri::HTML open(doc_path)
-    @input_html   = CodeRay.scan(html_doc, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_markup = CodeRay.scan(html_doc, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
 
     dom_output ||= []
 
@@ -55,8 +66,8 @@ class CompilerController < ApplicationController
       end
     end
 
-    @output_html = dom_output.map{|pocket| pocket[:node].to_html}.join("\n")
-    @output_html_colored = CodeRay.scan(@output_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @output_markup = dom_output.map{|pocket| pocket[:node].to_html}.join("\n")
+    @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
 end
