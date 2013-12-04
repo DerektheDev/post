@@ -2,7 +2,7 @@ class CompilerController < ApplicationController
 
   def index
     compile_styles("app/assets/stylesheets/test.css")
-    compile_markup("app/views/compiler/markup/example.html.haml")
+    compile_markup("app/views/compiler/markup/example.haml")
   end
 
   def compile_styles doc_path
@@ -29,11 +29,10 @@ class CompilerController < ApplicationController
 
     tree = case get_ext(doc_path)
     when :html
-      ap tree = Nokogiri::HTML(open(doc_path))
+      Nokogiri::HTML(open(doc_path))
     when :haml
       engine = Haml::Engine.new(input_markup)
       # http://haml.info/docs/yardoc/file.REFERENCE.html
-      ap engine.render
       Nokogiri::HTML(engine.render)
     end
 
@@ -50,8 +49,13 @@ class CompilerController < ApplicationController
 
     @css_doc.rule_sets.each do |rule_set|
       rule_set.selectors.each do |selector|
+=begin
+  FAILING_EXAMPLE.HAML FAILS HERE
+  NO MATCHES
+=end
         # find elements matching this selector
         matched_elems = tree.css(selector.to_s)
+        ap matched_elems
         if matched_elems
           matched_elems.each do |node|
             # create an array of found elements

@@ -12,7 +12,12 @@ h2.testclass{
   border: 2px dashed lime;
 }
 #yep{
-  margin-bottom:10em;
+  /*margin-bottom:10em;*/
+  /*
+    MULTIPLE IDs ON ONE ELEMENT FAILS
+    HTML - first wins out
+    HAML - last wins out
+  */
 }
 h2#testid{
   font-style: italic;
