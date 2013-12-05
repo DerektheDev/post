@@ -1,7 +1,7 @@
 class CompilerController < ApplicationController
 
   def index
-    compile_styles("app/assets/stylesheets/test.css.scss")
+    compile_styles("app/assets/stylesheets/test.css")
     compile_markup("app/views/compiler/markup/example.haml")
   end
 
@@ -47,36 +47,57 @@ class CompilerController < ApplicationController
 
     dom_output ||= []
 
-    @css_doc.rule_sets.each do |rule_set|
-      rule_set.selectors.each do |selector|
-=begin
-  FAILING_EXAMPLE.HAML FAILS HERE
-  NO MATCHES
-=end
-        # find elements matching this selector
-        matched_elems = tree.css(selector.to_s)
-        ap matched_elems
-        if matched_elems
-          matched_elems.each do |node|
-            # create an array of found elements
-            # If we already have an element in this array that has the same
-            # node path, simply add to its style string. This will prevent
-            # styles from being overwritten by the new style declaration block.
-            if index_match = dom_output.index{|pocket| pocket[:node].path == node.path}
-              dom_output[index_match][:css].push selector.declarations
-              dom_output[index_match][:node][:style] = dom_output[index_match][:css].join('').strip
-            else
-              # but if this is a new DOM element that has not yet been styled
-              # then we can push it into the array as such
-              node[:style] = selector.declarations.join('').strip
-              dom_output.push({ node: node, css: selector.declarations })
-            end
+#     @css_doc.rule_sets.each do |rule_set|
+#       rule_set.selectors.each do |selector|
+# =begin
+#   FAILING_EXAMPLE.HAML FAILS HERE
+#   NO MATCHES
+# =end
+#         # find elements matching this selector
+#         matched_elems = tree.css(selector.to_s)
+#         ap matched_elems
+#         if matched_elems
+#           matched_elems.each do |node|
+#             # create an array of found elements
+#             # If we already have an element in this array that has the same
+#             # node path, simply add to its style string. This will prevent
+#             # styles from being overwritten by the new style declaration block.
+#             if index_match = dom_output.index{|pocket| pocket[:node].path == node.path}
+#               dom_output[index_match][:css].push selector.declarations
+#               dom_output[index_match][:node][:style] = dom_output[index_match][:css].join('').strip
+#             else
+#               # but if this is a new DOM element that has not yet been styled
+#               # then we can push it into the array as such
+#               node[:style] = selector.declarations.join('').strip
+#               dom_output.push({ node: node, css: selector.declarations })
+#             end
+#           end
+#         end
+#       end
+#     end
+
+
+    tree.root.children.each do |node|
+      matching_rule_sets = []
+      node[:style] = []
+      @css_doc.rule_sets.each do |rule_set|
+        rule_set.selectors.each do |selector|
+          # selector.to_s # tagname.classname
+          if tree.css(selector.to_s).include? node
+            node[:style].push rule_set.declarations
           end
         end
       end
+
+# oops
+
+      dom_output.push node
     end
 
-    @output_markup = dom_output.map{|pocket| pocket[:node].to_html}.join("\n")
+# laksdjfksajdf
+
+
+    @output_markup = dom_output.map(&:to_html).join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 

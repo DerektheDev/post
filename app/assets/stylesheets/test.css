@@ -1,10 +1,11 @@
-h1 {
+h2.testclass,
+h2.walrus {
   color:red;
   font-weight: bold;
 }
-h2 {
+/*h2 {
   color:blue;
-}
+}*/
 h2.testclass{
   background: wheat;
 }
