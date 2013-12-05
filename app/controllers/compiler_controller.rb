@@ -1,7 +1,7 @@
 class CompilerController < ApplicationController
 
   def index
-    compile_styles("app/assets/stylesheets/test.css")
+    compile_styles("app/assets/stylesheets/test.css.scss")
     compile_markup("app/views/compiler/markup/example.haml")
   end
 
@@ -83,7 +83,8 @@ class CompilerController < ApplicationController
 #############################
 
   def get_ext doc_path
-    File.extname(doc_path).gsub(/\./,'').to_sym
+    output = File.extname(doc_path).gsub(/\./,'').to_sym
+    output = output == :scss ? :sass : output
   end
 
 end
