@@ -45,59 +45,12 @@ class CompilerController < ApplicationController
 
     @input_markup = CodeRay.scan(input_markup, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
 
-    dom_output ||= []
+    @dom_output ||= []
 
-#     @css_doc.rule_sets.each do |rule_set|
-#       rule_set.selectors.each do |selector|
-# =begin
-#   FAILING_EXAMPLE.HAML FAILS HERE
-#   NO MATCHES
-# =end
-#         # find elements matching this selector
-#         matched_elems = tree.css(selector.to_s)
-#         ap matched_elems
-#         if matched_elems
-#           matched_elems.each do |node|
-#             # create an array of found elements
-#             # If we already have an element in this array that has the same
-#             # node path, simply add to its style string. This will prevent
-#             # styles from being overwritten by the new style declaration block.
-#             if index_match = dom_output.index{|pocket| pocket[:node].path == node.path}
-#               dom_output[index_match][:css].push selector.declarations
-#               dom_output[index_match][:node][:style] = dom_output[index_match][:css].join('').strip
-#             else
-#               # but if this is a new DOM element that has not yet been styled
-#               # then we can push it into the array as such
-#               node[:style] = selector.declarations.join('').strip
-#               dom_output.push({ node: node, css: selector.declarations })
-#             end
-#           end
-#         end
-#       end
-#     end
+    apply_styles tree, tree.root
 
 
-    tree.root.children.each do |node|
-      matching_rule_sets = []
-      node[:style] = []
-      @css_doc.rule_sets.each do |rule_set|
-        rule_set.selectors.each do |selector|
-          # selector.to_s # tagname.classname
-          if tree.css(selector.to_s).include? node
-            node[:style].push rule_set.declarations
-          end
-        end
-      end
-
-# oops
-
-      dom_output.push node
-    end
-
-# laksdjfksajdf
-
-
-    @output_markup = dom_output.map(&:to_html).join("\n")
+    @output_markup = @dom_output.map(&:to_html).join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
@@ -106,6 +59,36 @@ class CompilerController < ApplicationController
   def get_ext doc_path
     output = File.extname(doc_path).gsub(/\./,'').to_sym
     output = output == :scss ? :sass : output
+  end
+
+  def apply_styles tree, branch
+    branch.children.each do |node|
+      if node.class == Nokogiri::XML::Element
+        matching_rule_sets = []
+        style_declarations = []
+        @css_doc.rule_sets.each do |rule_set|
+          rule_set.selectors.each do |selector|
+
+            tree.css(selector.to_s).each do |matched_elem|
+              if matched_elem.path == node.path
+                style_declarations.push rule_set.declarations
+              end
+            end
+          end
+        end
+
+        if style_declarations.present?
+          node[:style] = style_declarations.join('').strip
+        end
+        @dom_output.push node
+
+        unless branch.children.empty?
+          # ap branch.children
+          ap node.class
+          apply_styles tree, branch.children
+        end
+      end
+    end
   end
 
 end
