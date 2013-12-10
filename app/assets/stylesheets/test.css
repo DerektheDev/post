@@ -19,6 +19,11 @@ h2.testclass{
 .hotdog{
   border: 2px dashed lime;
 }
+
+.red{
+  color: yellow;
+}
+
 #yep{
   /*margin-bottom:10em;*/
   /*

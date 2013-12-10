@@ -47,17 +47,16 @@ class CompilerController < ApplicationController
 
     @dom_output ||= []
 
+    tree_root = tree.root.children.first # skips straight to inside body tag
+    first_branch = tree_root
 
-    root = tree.root
+    # ap '----------------'
+    # ap tree.class
+    # ap root.class
+    # ap '----------------'
 
 
-    # ap '[[[[[[[[[[[[[[[[[[[[[[[['
-    # pp tree.root
-    # # ap root.children.class
-    # ap ']]]]]]]]]]]]]]]]]]]]]]]]'
-
-
-    apply_styles tree, root
+    apply_styles tree_root, tree_root 
 
     @output_markup = @dom_output.map(&:to_html).join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
@@ -70,29 +69,45 @@ class CompilerController < ApplicationController
     output = output == :scss ? :sass : output
   end
 
+  def nodes_found_for branch, selector
+    ap 'running nodes_found_for'
+    found_nodes = branch.css(selector.to_s).to_a
+    found_nodes.uniq{|elem| elem.path}
+  end
+
+  def nodes_found_for? branch, selector
+    ap 'running nodes_found_for?'
+    found_nodes = nodes_found_for(branch, selector, node)
+    (found_nodes && found_nodes.count > 0) ? true : false
+  end
+
   def apply_styles tree, branch
 
     branch.children.select{|node| node.class == Nokogiri::XML::Element}.each do |node|
-      matching_selectors = []
+      matching_rule_sets = []
 
       @css_doc.rule_sets.each do |rule_set|
         rule_set.selectors.each do |selector|
-          tree.css(selector.to_s).each do |matched_elem|
-            if matched_elem.path == node.path
-              matching_selectors.push selector
-            end
+          # find nodes that match the selector
+          found_nodes = nodes_found_for(tree, selector)
+          # if this rule_set applies to this node
+          matching_nodes = found_nodes.select{|fn| fn.path == node.path}
+          if matching_nodes.present?
+            matching_rule_sets.push rule_set
           end
         end
       end
 
-      ap matching_selectors
-
-      if matching_selectors.present?
-        node[:style] = matching_selectors.map{|selector| selector.declarations}.join('')
+      # if there are any rule_sets that apply to this node, inline 'em
+      if matching_rule_sets.present?
+        node[:style] = matching_rule_sets.map{|rs| rs.declarations}.join('').strip
       end
 
-      @dom_output.push node
-
+      # if matched_node = @dom_output.find{|elem| elem.path == node.path}
+      #   matched_node[:style] = matched_node[:style] + node[:style]
+      # elsif node[:style]
+        @dom_output.push node
+      # end
 
       unless branch.children.empty?
         apply_styles tree, branch.children
