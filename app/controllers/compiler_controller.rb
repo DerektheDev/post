@@ -73,46 +73,30 @@ class CompilerController < ApplicationController
   def apply_styles tree, branch
 
     branch.children.select{|node| node.class == Nokogiri::XML::Element}.each do |node|
-      matching_rule_sets = []
-      style_declarations = []
+      matching_selectors = []
 
-      # if node.class == Nokogiri::XML::Element
-        @css_doc.rule_sets.each do |rule_set|
-          rule_set.selectors.each do |selector|
-            tree.css(selector.to_s).each do |matched_elem|
-
-# ap 'matched_elem path'
-# ap matched_elem.path
-# ap 'node path'
-# ap node.path
-
-              if matched_elem.path == node.path
-                style_declarations.push rule_set.declarations
-# ap true
-              else
-# ap false
-              end
-
-# puts "\n"
-
+      @css_doc.rule_sets.each do |rule_set|
+        rule_set.selectors.each do |selector|
+          tree.css(selector.to_s).each do |matched_elem|
+            if matched_elem.path == node.path
+              matching_selectors.push selector
             end
           end
         end
+      end
 
-        if style_declarations.present?
-          if matched_node = @dom_output.find{|elem| elem.path == node.path}
-            ap 'already present!!!', options: {colorize: :green}
-            matched_node[:style] = matched_node[:style] + node[:style]
-          else
-            node[:style] = style_declarations.join('')
-            @dom_output.push node
-          end
-        end
+      ap matching_selectors
 
-        unless branch.children.empty?
-          apply_styles tree, branch.children
-        end
-      # end
+      if matching_selectors.present?
+        node[:style] = matching_selectors.map{|selector| selector.declarations}.join('')
+      end
+
+      @dom_output.push node
+
+
+      unless branch.children.empty?
+        apply_styles tree, branch.children
+      end
     end
   end
 
