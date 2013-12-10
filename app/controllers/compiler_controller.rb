@@ -48,15 +48,8 @@ class CompilerController < ApplicationController
     @dom_output ||= []
 
     tree_root = tree.root.children.first # skips straight to inside body tag
-    first_branch = tree_root
 
-    # ap '----------------'
-    # ap tree.class
-    # ap root.class
-    # ap '----------------'
-
-
-    apply_styles tree_root, tree_root 
+    apply_styles tree_root, tree_root
 
     @output_markup = @dom_output.map(&:to_html).join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
@@ -70,14 +63,12 @@ class CompilerController < ApplicationController
   end
 
   def nodes_found_for branch, selector
-    ap 'running nodes_found_for'
     found_nodes = branch.css(selector.to_s).to_a
     found_nodes.uniq{|elem| elem.path}
   end
 
   def nodes_found_for? branch, selector
-    ap 'running nodes_found_for?'
-    found_nodes = nodes_found_for(branch, selector, node)
+    found_nodes = nodes_found_for(branch, selector)
     (found_nodes && found_nodes.count > 0) ? true : false
   end
 
@@ -100,14 +91,15 @@ class CompilerController < ApplicationController
 
       # if there are any rule_sets that apply to this node, inline 'em
       if matching_rule_sets.present?
-        node[:style] = matching_rule_sets.map{|rs| rs.declarations}.join('').strip
+        styles_for_rs = matching_rule_sets.map{|rs| rs.declarations}.join('').strip
       end
 
-      # if matched_node = @dom_output.find{|elem| elem.path == node.path}
-      #   matched_node[:style] = matched_node[:style] + node[:style]
-      # elsif node[:style]
+      if matched_index = @dom_output.index{|elem| elem.path == node.path}
+        @dom_output[matched_index][:style] = @dom_output[matched_index][:style] + styles_for_rs
+      elsif styles_for_rs
+        node[:style] = styles_for_rs
         @dom_output.push node
-      # end
+      end
 
       unless branch.children.empty?
         apply_styles tree, branch.children
