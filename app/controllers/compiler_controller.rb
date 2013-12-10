@@ -47,8 +47,17 @@ class CompilerController < ApplicationController
 
     @dom_output ||= []
 
-    apply_styles tree, tree.root
 
+    root = tree.root
+
+
+    # ap '[[[[[[[[[[[[[[[[[[[[[[[['
+    # pp tree.root
+    # # ap root.children.class
+    # ap ']]]]]]]]]]]]]]]]]]]]]]]]'
+
+
+    apply_styles tree, root
 
     @output_markup = @dom_output.map(&:to_html).join("\n")
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
@@ -62,32 +71,48 @@ class CompilerController < ApplicationController
   end
 
   def apply_styles tree, branch
-    branch.children.each do |node|
-      if node.class == Nokogiri::XML::Element
-        matching_rule_sets = []
-        style_declarations = []
+
+    branch.children.select{|node| node.class == Nokogiri::XML::Element}.each do |node|
+      matching_rule_sets = []
+      style_declarations = []
+
+      # if node.class == Nokogiri::XML::Element
         @css_doc.rule_sets.each do |rule_set|
           rule_set.selectors.each do |selector|
-
             tree.css(selector.to_s).each do |matched_elem|
+
+# ap 'matched_elem path'
+# ap matched_elem.path
+# ap 'node path'
+# ap node.path
+
               if matched_elem.path == node.path
                 style_declarations.push rule_set.declarations
+# ap true
+              else
+# ap false
               end
+
+# puts "\n"
+
             end
           end
         end
 
         if style_declarations.present?
-          node[:style] = style_declarations.join('').strip
+          if matched_node = @dom_output.find{|elem| elem.path == node.path}
+            ap 'already present!!!', options: {colorize: :green}
+            matched_node[:style] = matched_node[:style] + node[:style]
+          else
+            node[:style] = style_declarations.join('')
+            @dom_output.push node
+          end
         end
-        @dom_output.push node
 
         unless branch.children.empty?
-          # ap branch.children
-          ap node.class
           apply_styles tree, branch.children
         end
-      end
+      # end
     end
   end
 

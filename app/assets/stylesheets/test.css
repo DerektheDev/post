@@ -3,9 +3,16 @@ h2.walrus {
   color:red;
   font-weight: bold;
 }
-/*h2 {
+h2 {
   color:blue;
-}*/
+}
+.crazydiv h1{
+  color:yellow;
+}
+h1{
+  color:green;
+}
+
 h2.testclass{
   background: wheat;
 }
