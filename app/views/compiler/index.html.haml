@@ -14,8 +14,18 @@
   %hr
 
   .row
+    .col-sm-6
+      .well=raw @dom_output.map(&:path).join("<br />")
+
+  %hr
+
+  .row
     .col-sm-12
-      %h3 Input
+      %h3 Input Markup
       .row
-        .col-sm-6=raw @input_markup
-        .col-sm-6=raw @input_styles
+        .col-sm-5=raw @input_markup_preprocessed
+        %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
+        .col-sm-5=raw @input_markup_postprocessed
+      %h3 Input Styles
+      .row
+        .col-sm-12=raw @input_styles

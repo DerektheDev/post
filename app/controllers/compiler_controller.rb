@@ -25,13 +25,13 @@ class CompilerController < ApplicationController
 
   def compile_markup doc_path
 
-    input_markup = File.open(doc_path, 'r').read
+    raw_input_markup_preprocessed = File.open(doc_path, 'r').read
 
     tree = case get_ext(doc_path)
     when :html
       Nokogiri::HTML(open(doc_path))
     when :haml
-      engine = Haml::Engine.new(input_markup)
+      engine = Haml::Engine.new(raw_input_markup_preprocessed)
       # http://haml.info/docs/yardoc/file.REFERENCE.html
       Nokogiri::HTML(engine.render)
     end
@@ -43,15 +43,19 @@ class CompilerController < ApplicationController
     # finished.
     #
 
-    @input_markup = CodeRay.scan(input_markup, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
-
     @dom_output ||= []
 
     tree_root = tree.root.children.first # skips straight to inside body tag
 
+    @input_markup_preprocessed = CodeRay.scan(raw_input_markup_preprocessed, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_markup_postprocessed = CodeRay.scan(tree_root.to_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
+
+
     apply_styles tree_root, tree_root
 
+
     @output_markup = @dom_output.map(&:to_html).join("\n")
+
     @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
@@ -74,37 +78,46 @@ class CompilerController < ApplicationController
 
   def apply_styles tree, branch
 
-    branch.children.select{|node| node.class == Nokogiri::XML::Element}.each do |node|
-      matching_rule_sets = []
+    branch.children.each do |node|
 
-      @css_doc.rule_sets.each do |rule_set|
-        rule_set.selectors.each do |selector|
-          # find nodes that match the selector
-          found_nodes = nodes_found_for(tree, selector)
-          # if this rule_set applies to this node
-          matching_nodes = found_nodes.select{|fn| fn.path == node.path}
-          if matching_nodes.present?
-            matching_rule_sets.push rule_set
+      if node.class == Nokogiri::XML::Element
+
+        matching_rule_sets = []
+        matching_nodes = []
+
+        @css_doc.rule_sets.each do |rule_set|
+          rule_set.selectors.each do |selector|
+            # find nodes that match the selector
+            found_nodes = nodes_found_for(tree, selector)
+
+            # if this rule_set applies to this node
+            matching_nodes = found_nodes.select{|fn| fn.path == node.path}
+
+            if matching_nodes.present?
+              unless matching_rule_sets.include? rule_set
+                matching_rule_sets.push rule_set
+              end
+            end
           end
         end
-      end
 
-      # if there are any rule_sets that apply to this node, inline 'em
-      if matching_rule_sets.present?
-        styles_for_rs = matching_rule_sets.map{|rs| rs.declarations}.join('').strip
-      end
+        # if there are any rule_sets that apply to this node, inline 'em
+        if matching_rule_sets.present?
+          styles_for_rs = matching_rule_sets.uniq{|dec| dec}.map{|rs| rs.declarations}.join('').strip
+        end
 
-      if matched_index = @dom_output.index{|elem| elem.path == node.path}
-        @dom_output[matched_index][:style] = @dom_output[matched_index][:style] + styles_for_rs
-      elsif styles_for_rs
-        node[:style] = styles_for_rs
-        @dom_output.push node
-      end
+        if matched_index = @dom_output.index{|elem| elem.path == node.path}
+          current_styles = @dom_output[matched_index][:style]
+          @dom_output[matched_index][:style] = (current_styles + styles_for_rs).strip
+        elsif styles_for_rs
+          node[:style] = styles_for_rs
+          @dom_output.push node
+        end
 
-      unless branch.children.empty?
-        apply_styles tree, branch.children
+        unless node.children.empty?
+          apply_styles tree, node.children
+        end
       end
     end
   end
-
 end

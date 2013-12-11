@@ -11,3 +11,13 @@
  *= require_self
  *= require_tree .
  */
+
+.l-top{ vertical-align: top;    text-align: left;   }
+.c-top{ vertical-align: top;    text-align: center; }
+.r-top{ vertical-align: top;    text-align: right;  }
+.l-mid{ vertical-align: middle; text-align: left;   }
+.c-mid{ vertical-align: middle; text-align: center; }
+.b-mid{ vertical-align: middle; text-align: right;  }
+.l-bot{ vertical-align: bottom; text-align: left;   }
+.c-bot{ vertical-align: bottom; text-align: center; }
+.r-bot{ vertical-align: bottom; text-align: right;  }

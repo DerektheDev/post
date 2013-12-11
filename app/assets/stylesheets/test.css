@@ -1,16 +1,16 @@
 h2.testclass,
 h2.walrus {
-  color:red;
+  color: aqua;
   font-weight: bold;
 }
 h2 {
   color:blue;
 }
 .crazydiv h1{
-  color:yellow;
+  color: purple;
 }
 h1{
-  color:green;
+  /*color:green;*/
 }
 
 h2.testclass{
@@ -21,7 +21,7 @@ h2.testclass{
 }
 
 .red{
-  color: yellow;
+  color: red;
 }
 
 #yep{
@@ -36,7 +36,7 @@ h2#testid{
   font-style: italic;
 }
 p {
-  color:green;
+  color: mauve;
 }
 
 .some-class #some-id{
@@ -45,15 +45,5 @@ p {
 }
 
 .crazydiv{
-  /*
-    h1{
-      color:red;
-      .crazyclass{
-        line-height: 1em;
-        .another{
-          background: green;
-        }
-      }
-    }
-  */
+
 }
