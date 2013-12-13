@@ -2,11 +2,11 @@ class CompilerController < ApplicationController
 
   def index
     compile_styles("app/assets/stylesheets/test.css")
-    compile_markup("app/views/compiler/markup/example.haml")
+    compile_markup("app/views/compiler/markup/example.html")
   end
 
   def compile_styles doc_path
-    input_styles = File.open(doc_path, 'r').read
+    input_styles = File.read(doc_path)
     rendered_css = case get_ext(doc_path)
     when :css
       tree = CSSPool.CSS(open(doc_path)).to_css
@@ -15,7 +15,7 @@ class CompilerController < ApplicationController
       tree.render
     when :less
       parser = Less::Parser.new
-      tree = parser.parse(File.open(doc_path, 'r').read)
+      tree = parser.parse(File.read(doc_path))
       tree.to_css
     end
 
@@ -25,7 +25,7 @@ class CompilerController < ApplicationController
 
   def compile_markup doc_path
 
-    raw_input_markup_preprocessed = File.open(doc_path, 'r').read
+    raw_input_markup_preprocessed = File.read(doc_path)
 
     tree = case get_ext(doc_path)
     when :html

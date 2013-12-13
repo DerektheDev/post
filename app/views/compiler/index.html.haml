@@ -14,12 +14,6 @@
   %hr
 
   .row
-    .col-sm-6
-      .well=raw @dom_output.map(&:path).join("<br />")
-
-  %hr
-
-  .row
     .col-sm-12
       %h3 Input Markup
       .row
@@ -29,3 +23,9 @@
       %h3 Input Styles
       .row
         .col-sm-12=raw @input_styles
+
+  %hr
+
+  .row
+    .col-sm-6
+      .well=raw @dom_output.map(&:path).join("<br />")
