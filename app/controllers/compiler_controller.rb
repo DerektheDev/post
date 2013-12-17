@@ -3,53 +3,16 @@ class CompilerController < ApplicationController
   def index
     # change to pass in a file... not a document path
 
-    stylesheet_file = File.read("app/assets/stylesheets/test.css")
+    styles_file       = File.new("app/assets/stylesheets/test.css")
+    markup_file       = File.new("app/views/compiler/markup/example.html")
 
-    @rendered_css     = Compiler.rendered_css stylesheet_file
-    @syntax_highlight = Compiler.syntax_highlight stylesheet_file
+    @rendered_css     = Compiler::Styles.render styles_file
+    @syntax_highlight = Compiler.syntax_highlight styles_file
 
-    compile_markup("app/views/compiler/markup/example.html")
+    @rendered_html    = Compiler::Markup.render markup_file, styles_file
   end
 
 private
-
-
-
-  def compile_markup doc_path
-
-    raw_input_markup_preprocessed = File.read(doc_path)
-
-    tree = case Compiler.get_ext(doc_path)
-    when :html
-      Nokogiri::HTML(open(doc_path))
-    when :haml
-      engine = Haml::Engine.new(raw_input_markup_preprocessed)
-      # http://haml.info/docs/yardoc/file.REFERENCE.html
-      Nokogiri::HTML(engine.render)
-    end
-
-    #
-    # For media queries, we'll probably have to open the document,
-    # quarantine the media queries out of the file (into a separate
-    # array), and then place them in the head of the document when
-    # finished.
-    #
-
-    @dom_output ||= []
-
-    tree_root = tree.root.children.first # skips straight to inside body tag
-
-    @input_markup_preprocessed = CodeRay.scan(raw_input_markup_preprocessed, Compiler.get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
-    @input_markup_postprocessed = CodeRay.scan(tree_root.to_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
-
-
-    apply_styles tree_root, tree_root
-
-
-    @output_markup = @dom_output.map(&:to_html).join("\n")
-
-    @output_markup_colored = CodeRay.scan(@output_markup, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
-  end
 
 #############################
 
@@ -63,48 +26,5 @@ private
     (found_nodes && found_nodes.count > 0) ? true : false
   end
 
-  def apply_styles tree, branch
-
-    branch.children.each do |node|
-
-      if node.class == Nokogiri::XML::Element
-
-        matching_rule_sets = []
-        matching_nodes = []
-
-        @css_doc.rule_sets.each do |rule_set|
-          rule_set.selectors.each do |selector|
-            # find nodes that match the selector
-            found_nodes = nodes_found_for(tree, selector)
-
-            # if this rule_set applies to this node
-            matching_nodes = found_nodes.select{|fn| fn.path == node.path}
-
-            if matching_nodes.present?
-              unless matching_rule_sets.include? rule_set
-                matching_rule_sets.push rule_set
-              end
-            end
-          end
-        end
-
-        # if there are any rule_sets that apply to this node, inline 'em
-        if matching_rule_sets.present?
-          styles_for_rs = matching_rule_sets.uniq{|dec| dec}.map{|rs| rs.declarations}.join('').strip
-        end
-
-        if matched_index = @dom_output.index{|elem| elem.path == node.path}
-          current_styles = @dom_output[matched_index][:style]
-          @dom_output[matched_index][:style] = (current_styles + styles_for_rs).strip
-        elsif styles_for_rs
-          node[:style] = styles_for_rs
-          @dom_output.push node
-        end
-
-        unless node.children.empty?
-          apply_styles tree, node.children
-        end
-      end
-    end
-  end
+  
 end
