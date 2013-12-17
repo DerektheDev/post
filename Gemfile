@@ -26,7 +26,6 @@ gem 'jbuilder', '~> 1.2'
 gem 'awesome_print'
 gem 'haml'
 gem 'thin'
-gem 'coderay' # syntax colorer
 
 #
 # PARSING GEMS
@@ -38,6 +37,10 @@ gem 'nokogiri' # html
 gem 'sass'
 gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
 
+#
+# APP UTILITIES
+gem 'coderay'   # syntax colorer
+gem 'paperclip' # file uploader
 
 
 # other junk that may be useful later

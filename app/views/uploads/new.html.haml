@@ -1,0 +1,6 @@
+%h3 Uploader
+.row
+  .col-sm-12
+    =form_for :upload, url: uploads_path do |f|
+      =f.file_field :file
+      =f.submit 'Upload HTML file'

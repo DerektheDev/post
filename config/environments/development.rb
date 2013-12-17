@@ -29,4 +29,7 @@ XdMailCompiler::Application.configure do
 
   BetterErrors.editor = :sublime
 
+  # paperclip development
+  Paperclip.options[:command_path] = "/usr/local/bin/"
+
 end

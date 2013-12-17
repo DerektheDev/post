@@ -1,33 +1,25 @@
 class CompilerController < ApplicationController
 
   def index
-    compile_styles("app/assets/stylesheets/test.css")
+    # change to pass in a file... not a document path
+
+    stylesheet_file = File.read("app/assets/stylesheets/test.css")
+
+    @rendered_css     = Compiler.rendered_css stylesheet_file
+    @syntax_highlight = Compiler.syntax_highlight stylesheet_file
+
     compile_markup("app/views/compiler/markup/example.html")
   end
 
-  def compile_styles doc_path
-    input_styles = File.read(doc_path)
-    rendered_css = case get_ext(doc_path)
-    when :css
-      tree = CSSPool.CSS(open(doc_path)).to_css
-    when :scss
-      tree = Sass::Engine.for_file(doc_path, {})
-      tree.render
-    when :less
-      parser = Less::Parser.new
-      tree = parser.parse(File.read(doc_path))
-      tree.to_css
-    end
+private
 
-    @css_doc      = CSSPool.CSS(rendered_css)
-    @input_styles = CodeRay.scan(input_styles, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
-  end
+
 
   def compile_markup doc_path
 
     raw_input_markup_preprocessed = File.read(doc_path)
 
-    tree = case get_ext(doc_path)
+    tree = case Compiler.get_ext(doc_path)
     when :html
       Nokogiri::HTML(open(doc_path))
     when :haml
@@ -47,7 +39,7 @@ class CompilerController < ApplicationController
 
     tree_root = tree.root.children.first # skips straight to inside body tag
 
-    @input_markup_preprocessed = CodeRay.scan(raw_input_markup_preprocessed, get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
+    @input_markup_preprocessed = CodeRay.scan(raw_input_markup_preprocessed, Compiler.get_ext(doc_path)).div(line_numbers: nil).gsub(/\n/, '<br>')
     @input_markup_postprocessed = CodeRay.scan(tree_root.to_html, :html).div(line_numbers: nil).gsub(/\n/, '<br>')
 
 
@@ -60,11 +52,6 @@ class CompilerController < ApplicationController
   end
 
 #############################
-
-  def get_ext doc_path
-    output = File.extname(doc_path).gsub(/\./,'').to_sym
-    output = output == :scss ? :sass : output
-  end
 
   def nodes_found_for branch, selector
     found_nodes = branch.css(selector.to_s).to_a

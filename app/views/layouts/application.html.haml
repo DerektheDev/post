@@ -10,4 +10,10 @@
     = javascript_include_tag  '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js'
     = csrf_meta_tags
   %body
-    = yield
+    .container
+      %nav.navbar.navbar-inverse.navbar-default{role: :navigation}
+        .navbar-header
+          =link_to '#', class: 'navbar-brand' do
+            =image_tag 'xd-logo-bw.png', height: '30'
+      =flash[:alert]
+      = yield
