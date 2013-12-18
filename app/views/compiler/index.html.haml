@@ -3,8 +3,8 @@
     %h3 Output
 
 .row
-  .col-sm-6=raw @output_markup_colored
-  .col-sm-6=raw @output_markup
+  .col-sm-6=raw @shl_rendered_html
+  .col-sm-6=raw @rendered_html
 
 %hr
 
@@ -12,15 +12,11 @@
   .col-sm-12
     %h3 Input Markup
     .row
-      .col-sm-5=raw @input_markup_preprocessed
+      .col-sm-5=raw @shl_input_markup_raw
       %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
-      .col-sm-5=raw @input_markup_postprocessed
+      .col-sm-5=raw @shl_input_markup_to_html
     %h3 Input Styles
     .row
-      .col-sm-12=raw @input_styles
-
-%hr
-
-.row
-  .col-sm-6
-    .well=raw @dom_output.map(&:path).join("<br />")
+      .col-sm-5=raw @shl_input_styles_raw
+      %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
+      .col-sm-5=raw @shl_input_styles_to_css

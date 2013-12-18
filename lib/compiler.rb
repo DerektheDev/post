@@ -1,7 +1,8 @@
 module Compiler
 
-  def self.syntax_highlight file
-    CodeRay.scan(file, self.get_ext(file)).div(line_numbers: nil).gsub(/\n/, '<br>')
+  def self.syntax_highlight input, ext
+    input_string = input.kind_of?(File) ? File.read(input) : input
+    CodeRay.scan(input_string, ext).div(line_numbers: nil).gsub(/\n/, '<br>')
   end
 
   def self.get_ext file

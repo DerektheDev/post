@@ -9,7 +9,7 @@ module Compiler
     def self.render file
       tree_string = case Compiler.get_ext(file)
       when :css
-        CSSPool.CSS(file.read).to_css
+        CSSPool.CSS(File.read(file)).to_css
       when :scss
         tree = Sass::Engine.for_file(file.read, {})
         tree.render
