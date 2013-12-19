@@ -24,13 +24,13 @@ module Compiler
       # finished.
       #
 
-      tree_root = tree.root.children.first # skips straight to inside body tag
-      # tree_root = tree.root
+      # each of these targets every other item... what the...?
+      # @tree_root = tree.root.children.first # skips straight to inside body tag
+      @tree_root = tree.root
 
-      @dom_output ||= []
-      self.apply_styles tree_root, tree_root, styles_file
+      self.apply_styles @tree_root, @tree_root, styles_file
 
-      output_markup = @dom_output.map(&:to_html).join("\n")
+      output_markup = @tree_root
     end
 
 
@@ -59,20 +59,16 @@ module Compiler
           end
 
           # if there are any rule_sets that apply to this node, inline 'em
-          if matching_rule_sets.present?
-            styles_for_rs = matching_rule_sets.uniq{|dec| dec}.map{|rs| rs.declarations}.join('').strip
+          styles_for_rs = if matching_rule_sets.present?
+            matching_rule_sets.uniq{|dec| dec}.map{|rs| rs.declarations}
           end
 
-
-
-          if matched_index = @dom_output.index{|elem| elem.path == node.path}
-            current_styles = @dom_output[matched_index][:style]
-            @dom_output[matched_index][:style] = (current_styles + styles_for_rs).strip
-          elsif styles_for_rs
-            node[:style] = styles_for_rs
-            @dom_output.push node
+          # apply the styles
+          if matched_node = @tree_root.xpath(node.path)
+            matched_node.attribute(:style, styles_for_rs.join('').strip) if styles_for_rs
           end
 
+          # move down the Nokogiri DOM tree
           unless node.children.empty?
             apply_styles tree, node.children, styles_file
           end
