@@ -54,7 +54,7 @@ module Compiler
                 unless matching_rule_sets.include? rule_set
                   matching_rule_sets.push({
                     rule_set: rule_set,
-                    specificity: selector.specificity.inject(:+) # adds specificity array values?
+                    specificity: selector.specificity.zip([100, 10, 1]).map{|x,y| x*y}.inject(:+)
                   })
                 end
               end
@@ -66,8 +66,6 @@ module Compiler
           if matching_rule_sets.present?
             styles_for_rs = matching_rule_sets.uniq{|rs| rs}.sort_by{|rs| rs[:specificity]}.map{|rs| rs[:rule_set].declarations}
           end
-# ap styles_for_rs
-
 
           # apply the styles
           if matched_node = @tree_root.xpath(node.path)
