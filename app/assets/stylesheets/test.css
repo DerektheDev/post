@@ -1,7 +1,10 @@
-h2.testclass,
-h2.walrus {
+h2.testclass#something,
+h2.walrus,
+h2.flippyfloppy,
+h4.piddlepaddle {
   color: aqua;
   font-weight: bold;
+  background: red;
 }
 h2 {
   color:blue;

@@ -52,16 +52,22 @@ module Compiler
 
               if matching_nodes.present?
                 unless matching_rule_sets.include? rule_set
-                  matching_rule_sets.push rule_set
+                  matching_rule_sets.push({
+                    rule_set: rule_set,
+                    specificity: selector.specificity.inject(:+) # adds specificity array values?
+                  })
                 end
               end
             end
           end
 
           # if there are any rule_sets that apply to this node, inline 'em
-          styles_for_rs = if matching_rule_sets.present?
-            matching_rule_sets.uniq{|dec| dec}.map{|rs| rs.declarations}
+          
+          if matching_rule_sets.present?
+            styles_for_rs = matching_rule_sets.uniq{|rs| rs}.sort_by{|rs| rs[:specificity]}.map{|rs| rs[:rule_set].declarations}
           end
+# ap styles_for_rs
+
 
           # apply the styles
           if matched_node = @tree_root.xpath(node.path)
