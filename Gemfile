@@ -26,6 +26,8 @@ gem 'jbuilder', '~> 1.2'
 gem 'awesome_print'
 gem 'haml'
 gem 'thin'
+gem 'debugger'
+gem 'pry'
 
 #
 # PARSING GEMS

@@ -70,7 +70,7 @@ module Compiler
 
           # move down the Nokogiri DOM tree
           unless node.children.empty?
-            apply_styles tree, node.children, styles_file
+            apply_styles tree, node, styles_file
           end
         end
       end
