@@ -21,3 +21,10 @@
 .l-bot{ vertical-align: bottom; text-align: left;   }
 .c-bot{ vertical-align: bottom; text-align: center; }
 .r-bot{ vertical-align: bottom; text-align: right;  }
+
+#dropzone{
+	background: #dfd;
+	padding: 1em;
+	border-radius: 1em;
+	border: 3px dashed #aca;
+}

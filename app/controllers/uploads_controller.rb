@@ -1,7 +1,9 @@
 class UploadsController < ApplicationController
   def create
 
-    og_fname = params[:upload][:file].original_filename
+    ap 'starting create'
+
+    og_fname = params[:upload].original_filename
     extension = Compiler.get_ext(og_fname)
 
     if extension == :zip
@@ -10,14 +12,14 @@ class UploadsController < ApplicationController
     elsif Markup.permitted_filetypes.include? extension
       # upload as markup document
       @markup = Markup.create({
-                file: params[:upload][:file],
-        preprocessed: params[:upload][:file].read
+                file: params[:upload],
+        preprocessed: params[:upload].read
       })
     elsif Stylesheet.permitted_filetypes.include? extension
       # upload as a stylesheet document
       @stylesheet = Stylesheet.create({
-                file: params[:upload][:file],
-        preprocessed: params[:upload][:file].read
+                file: params[:upload],
+        preprocessed: params[:upload].read
       })
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
