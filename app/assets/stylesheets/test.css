@@ -54,3 +54,12 @@ p {
     text-decoration:underline;
   */
 }
+
+
+/***MQ***
+@media (max-width: 699px) {
+  body {
+    background: #ccc;
+  }
+}
+***MQ***/

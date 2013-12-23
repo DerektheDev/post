@@ -14,7 +14,6 @@
 ActiveRecord::Schema.define(version: 20131216193328) do
 
   create_table "markups", force: true do |t|
-    t.string   "extension"
     t.text     "preprocessed"
     t.text     "postprocessed"
     t.string   "file_file_name"
@@ -26,7 +25,6 @@ ActiveRecord::Schema.define(version: 20131216193328) do
   end
 
   create_table "stylesheets", force: true do |t|
-    t.string   "extension"
     t.text     "preprocessed"
     t.text     "postprocessed"
     t.string   "file_file_name"
