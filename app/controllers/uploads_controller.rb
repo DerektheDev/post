@@ -11,7 +11,7 @@ class UploadsController < ApplicationController
       sort_and_create_files_for extension, campaign
     end
 
-    redirect_to collect_assets_for_compiler_path
+    redirect_to collect_assets_compiler_index_path
   end
 
 private

@@ -1,6 +1,6 @@
 / http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
 .row
-  .col-sm-12
+  .col-sm-3
     = form_tag '/uploads', multipart: true, id: :dropzone do
       %i.fa.fa-cloud-upload.fa-3x
       = file_field_tag :upload
@@ -8,6 +8,31 @@
       .bar{style: "width:0%;"}
     / The loading indicator is shown during image processing
     .fileupload-loading
+  .col-sm-3
+    .well#markup-assets
+      %h4
+        %i.fa.fa-code
+        Markup Assets
+      %ul
+        -@campaign.markups.each do |markup|
+          %li=File.basename markup.file.url[/[^?]+/]
+  .col-sm-3
+    .well#style-assets
+      %h4
+        %i.fa.fa-leaf
+        Style Assets
+      %ul
+        -@campaign.stylesheets.each do |stylesheet|
+          %li=File.basename stylesheet.file.url[/[^?]+/]
+
+  .col-sm-3
+    .well#image-assets
+      %h4
+        %i.fa.fa-picture-o
+        Image Assets
+      %ul
+        -@campaign.images.each do |image|
+          %li{href: image.file.url}=File.basename image.file.url[/[^?]+/]
 
 .row
   .col-sm-12

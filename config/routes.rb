@@ -2,6 +2,12 @@ XdMailCompiler::Application.routes.draw do
 
   root 'compiler#index'
 
+  resources :compiler do
+    collection do
+      get :collect_assets # for a campaign
+    end
+  end
+
   resources :uploads
 
   # The priority is based upon order of creation: first created -> highest priority.

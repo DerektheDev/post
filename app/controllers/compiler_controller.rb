@@ -7,13 +7,13 @@ class CompilerController < ApplicationController
     #   Campaign.create.id
     # end
     # @campaign = Campaign.find(session[:campaign_id])
-    @campaign = Campaign.first
 
-    collect_assets_for @campaign
+    collect_assets
   end
 
-private
-  def collect_assets_for campaign
+  def collect_assets
+    @campaign = Campaign.first
+
     stylesheets = @campaign.stylesheets
     markup_docs = @campaign.markups
     images      = @campaign.images
@@ -21,6 +21,8 @@ private
     get_styles File.new stylesheets.first.file.path
     get_markup File.new(markup_docs.first.file.path), File.new(stylesheets.first.file.path)
   end
+
+private
 
   def get_styles styles_file
     @input_styles_raw         = File.read styles_file
