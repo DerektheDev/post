@@ -4,10 +4,11 @@
     %title XdMailCompiler
     = stylesheet_link_tag     'application', media: :all, 'data-turbolinks-track' => true
     = javascript_include_tag  'application', 'data-turbolinks-track' => true
-    = stylesheet_link_tag     '//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'
-    = javascript_include_tag  '//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js'
-    = stylesheet_link_tag     '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'
-    = javascript_include_tag  '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js'
+    = stylesheet_link_tag     '//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', |
+                              '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'
+    = javascript_include_tag  '//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js',          |
+                              '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js', |
+                              'js/vendor/jquery.ui.widget', 'js/jquery.fileupload', 'upload'
     = csrf_meta_tags
   %body
     .container

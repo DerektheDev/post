@@ -1,19 +1,17 @@
 class UploadsController < ApplicationController
   def create
     # ap 'starting create'
-
-    og_fname = params[:upload].original_filename
-    extension = Compiler.get_ext(og_fname)
-
-    session[:campaign_id] = session[:campaign_id] || Campaign.create
+    extension = Compiler.get_ext(params[:upload].original_filename)
+    campaign = Campaign.find(session[:campaign_id])
 
     if extension == :zip
       # unzip zip file
       # each file/sort/create
     else
-      sort_and_create_files_for campaign
+      sort_and_create_files_for extension, campaign
     end
-    redirect_to root_path
+
+    redirect_to collect_assets_for_compiler_path
   end
 
 private
@@ -24,7 +22,7 @@ private
     params.require(:upload).permit(:file)
   end
 
-  def sort_and_create_files_for campaign
+  def sort_and_create_files_for extension, campaign
     if Markup.permitted_filetypes.include? extension
       # upload as markup document
       @markup = Markup.create({

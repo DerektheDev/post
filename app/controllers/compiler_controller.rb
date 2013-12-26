@@ -1,11 +1,25 @@
 class CompilerController < ApplicationController
 
   def index
-    styles_file               = File.new("app/assets/stylesheets/test.css")
-    markup_file               = File.new("app/views/compiler/markup/example.html")
+    # session[:campaign_id] = if session[:campaign_id] && Campaign.exists?(session[:campaign_id])
+    #   session[:campaign_id]
+    # else
+    #   Campaign.create.id
+    # end
+    # @campaign = Campaign.find(session[:campaign_id])
+    @campaign = Campaign.first
 
-    get_styles styles_file
-    get_markup markup_file, styles_file
+    collect_assets_for @campaign
+  end
+
+private
+  def collect_assets_for campaign
+    stylesheets = @campaign.stylesheets
+    markup_docs = @campaign.markups
+    images      = @campaign.images
+
+    get_styles stylesheets.first
+    get_markup markup_docs.first, stylesheets.first
   end
 
   def get_styles styles_file

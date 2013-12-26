@@ -2,7 +2,7 @@ $(function () {
     $('#dropzone').fileupload({
         url: '/uploads',
         dataType: 'json',
-        autoUpload: false,
+        autoUpload: true,
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 5000000, // 5 MB
         // Enable image resizing, except for Android and Opera,

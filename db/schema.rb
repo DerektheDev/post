@@ -11,9 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131216193328) do
+ActiveRecord::Schema.define(version: 20131226152004) do
+
+  create_table "campaigns", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "images", force: true do |t|
+    t.integer  "campaign_id"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "markups", force: true do |t|
+    t.integer  "campaign_id"
     t.text     "preprocessed"
     t.text     "postprocessed"
     t.string   "file_file_name"
@@ -25,6 +41,7 @@ ActiveRecord::Schema.define(version: 20131216193328) do
   end
 
   create_table "stylesheets", force: true do |t|
+    t.integer  "campaign_id"
     t.text     "preprocessed"
     t.text     "postprocessed"
     t.string   "file_file_name"

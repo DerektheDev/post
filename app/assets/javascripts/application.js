@@ -13,6 +13,3 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require jquery.filedrop.js
-//= require js/vendor/jquery.ui.widget
-//= require_tree .
