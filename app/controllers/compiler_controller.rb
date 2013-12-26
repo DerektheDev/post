@@ -18,21 +18,21 @@ private
     markup_docs = @campaign.markups
     images      = @campaign.images
 
-    get_styles stylesheets.first
-    get_markup markup_docs.first, stylesheets.first
+    get_styles File.new stylesheets.first.file.path
+    get_markup File.new(markup_docs.first.file.path), File.new(stylesheets.first.file.path)
   end
 
   def get_styles styles_file
-    @input_styles_raw         = styles_file.read
-    @shl_input_styles_raw     = Compiler.syntax_highlight styles_file, Compiler.get_ext(styles_file)
+    @input_styles_raw         = File.read styles_file
+    @shl_input_styles_raw     = Compiler.syntax_highlight @input_styles_raw, Compiler.get_ext(styles_file)
     @shl_input_styles_to_css  = Compiler.syntax_highlight(Compiler::Styles.build_tree(styles_file).to_css, :css)
     @rendered_css             = Compiler::Styles.render   styles_file
     @shl_rendered_css         = Compiler.syntax_highlight @rendered_css, :css
   end
 
   def get_markup markup_file, styles_file
-    @input_markup_raw         = markup_file.read
-    @shl_input_markup_raw     = Compiler.syntax_highlight markup_file, Compiler.get_ext(markup_file)
+    @input_markup_raw         = File.read markup_file
+    @shl_input_markup_raw     = Compiler.syntax_highlight @input_markup_raw, Compiler.get_ext(markup_file)
     @shl_input_markup_to_html = Compiler.syntax_highlight(Compiler::Markup.build_tree(markup_file).to_html, :html)
     @rendered_html            = Compiler::Markup.render   markup_file, styles_file
     @shl_rendered_html        = Compiler.syntax_highlight @rendered_html, :html
