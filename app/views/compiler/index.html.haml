@@ -20,7 +20,7 @@
             %i.fa.fa-picture-o
             Image Assets
           %table.table.table-striped.table-condensed
-            -@campaign.images.each do |image|
+            -@campaign.assets.images.each do |image|
               %tr
                 %td
                   =link_to image.file.url, {class: :fancybox, data: {thumb: image.file.url(:thumb)}} do
@@ -31,7 +31,7 @@
             %i.fa.fa-code
             Markup Assets
           %table.table.table-striped.table-condensed
-            -@campaign.markups.each do |markup|
+            -@campaign.assets.markups.each do |markup|
               %tr
                 %td
                   =link_to review_code_compiler_index_path({file: strip_query(markup.file.url)}), {class: 'fancybox-ajax'} do
@@ -42,7 +42,7 @@
             %i.fa.fa-leaf
             Style Assets
           %table.table.table-striped.table-condensed
-            -@campaign.stylesheets.each do |stylesheet|
+            -@campaign.assets.stylesheets.each do |stylesheet|
               %tr
                 %td
                   =link_to review_code_compiler_index_path({file: strip_query(stylesheet.file.url)}), {class: 'fancybox-ajax'} do

@@ -6,19 +6,18 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-styles_file = File.new "app/assets/stylesheets/test.css"
-markup_file = File.new "app/views/compiler/markup/example.html"
-
 campaign = Campaign.create
 
-seed_styles = Stylesheet.create({
-   campaign_id: 1,
-          file: styles_file,
-  preprocessed: styles_file.read
-})
+seed_styles_path = "app/assets/stylesheets/test.css"
+seed_markup_path = "app/views/compiler/markup/example.html"
 
-seed_markup = Markup.create({
-   campaign_id: 1,
-          file: markup_file,
-  preprocessed: markup_file.read
+seed_styles = Asset.create({
+  campaign_id: campaign.id,
+    extension: Compiler.get_ext(File.new seed_styles_path),
+         file: File.new(seed_styles_path)
+})
+seed_markup = Asset.create({
+  campaign_id: campaign.id,
+    extension: Compiler.get_ext(File.new seed_markup_path),
+         file: File.new(seed_markup_path)
 })

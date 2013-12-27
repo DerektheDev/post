@@ -23,26 +23,19 @@ private
   end
 
   def sort_and_create_files_for extension, campaign
-    if Markup.permitted_filetypes.include? extension
-      # upload as markup document
-      @markup = Markup.create({
-         campaign_id: session[:campaign_id],
-                file: params[:upload],
-        preprocessed: params[:upload].read
-      })
-    elsif Stylesheet.permitted_filetypes.include? extension
-      # upload as a stylesheet document
-      @stylesheet = Stylesheet.create({
-         campaign_id: session[:campaign_id],
-                file: params[:upload],
-        preprocessed: params[:upload].read
-      })
-    elsif Image.permitted_filetypes.include? extension
-      # upload as an image
-      @image = Image.create({
+
+    asset_type = Asset.get_asset_type extension
+
+    if Asset.permitted_filetypes.include? extension
+      @asset = Asset.create({
         campaign_id: session[:campaign_id],
-               file: params[:upload]
+          extension: extension
       })
+      if Asset.permitted_image_filetypes.include? extension
+        @asset[:image] = params[:upload]
+      else
+        @asset[:file] = params[:upload]
+      end
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
     end

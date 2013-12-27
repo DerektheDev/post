@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MarkupTest < ActiveSupport::TestCase
+class AssetTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

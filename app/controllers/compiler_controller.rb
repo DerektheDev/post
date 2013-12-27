@@ -15,9 +15,9 @@ class CompilerController < ApplicationController
     @campaign = Campaign.first
     session[:campaign_id] ||= @campaign.id
 
-    stylesheets = @campaign.stylesheets
-    markup_docs = @campaign.markups
-    images      = @campaign.images
+    stylesheets = @campaign.assets.stylesheets
+    markup_docs = @campaign.assets.markups
+    images      = @campaign.assets.images
 
     get_styles File.new stylesheets.first.file.path
     get_markup File.new(markup_docs.first.file.path), File.new(stylesheets.first.file.path)
@@ -33,7 +33,7 @@ class CompilerController < ApplicationController
   end
 
   def delete_asset
-    
+
   end
 
 private
