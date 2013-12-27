@@ -28,6 +28,14 @@ class CompilerController < ApplicationController
     @sh_code = Compiler.syntax_highlight(file, Compiler.get_ext(file))
   end
 
+  def select_assets
+
+  end
+
+  def delete_asset
+    
+  end
+
 private
 
   def get_styles styles_file

@@ -1,12 +1,14 @@
 / http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
-= form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
-  = file_field_tag :upload 
+=# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
+  
+=form_tag select_assets_compiler_index_path, id: :dropzone, class: :row do
   .col-sm-12
     .row
       .col-sm-8
         %h4
           %strong Upload files by dragging them onto the window
-      .col-sm-4
+          = file_field_tag :upload
+      .col-sm-4.1
         .progress.progress-success.progress-striped.active
           .bar{style: "width:10%;"}
         / The loading indicator is shown during image processing
@@ -17,32 +19,34 @@
           %h4
             %i.fa.fa-picture-o
             Image Assets
-          %ul
+          %table.table.table-striped.table-condensed
             -@campaign.images.each do |image|
-              %li
-                =link_to image.file.url, {class: :fancybox, data: {thumb: image.file.url(:thumb)}} do
-                  =strip_query(File.basename image.file.url)
-                %i.fa.fa-times-circle
+              %tr
+                %td
+                  =link_to image.file.url, {class: :fancybox, data: {thumb: image.file.url(:thumb)}} do
+                    =strip_query(File.basename image.file.url)
       .col-sm-4
         .assets#markup-assets
           %h4
             %i.fa.fa-code
             Markup Assets
-          %ul
+          %table.table.table-striped.table-condensed
             -@campaign.markups.each do |markup|
-              %li
-                =link_to review_code_compiler_index_path({file: strip_query(markup.file.url)}), {class: 'fancybox-ajax'} do
-                  =strip_query(File.basename markup.file.url)
+              %tr
+                %td
+                  =link_to review_code_compiler_index_path({file: strip_query(markup.file.url)}), {class: 'fancybox-ajax'} do
+                    =strip_query(File.basename markup.file.url)
       .col-sm-4
         .assets#style-assets
           %h4
             %i.fa.fa-leaf
             Style Assets
-          %ul
+          %table.table.table-striped.table-condensed
             -@campaign.stylesheets.each do |stylesheet|
-              %li
-                =link_to review_code_compiler_index_path({file: strip_query(stylesheet.file.url)}), {class: 'fancybox-ajax'} do
-                  =strip_query(File.basename stylesheet.file.url)
+              %tr
+                %td
+                  =link_to review_code_compiler_index_path({file: strip_query(stylesheet.file.url)}), {class: 'fancybox-ajax'} do
+                    =strip_query(File.basename stylesheet.file.url)
 .row
   .col-sm-12
     %h3 Output

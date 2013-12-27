@@ -46,12 +46,23 @@ $(function () {
   })
 
   $('.fancybox').fancybox({
-    openEffect: 'elastic'
+    openEffect: 'elastic',
+    title: function(){
+      rm_link = "<a href='/compiler/delete_asset?pcid=";
+      rm_link += $(this).attr('paperclip-id');
+      rm_link += "'>Delete Asset</a>";
+      return rm_link;
+    }
   });
   $('.fancybox-ajax').fancybox({
-          type: 'iframe',
-    openEffect: 'elastic'
+         type: 'iframe',
+   openEffect: 'elastic'
   });
+
+  $('.danger-hover').hover(
+    function(){ $(this).addClass('btn-danger') },
+    function(){ $(this).removeClass('btn-danger') }
+  )
 
 
 

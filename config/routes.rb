@@ -4,8 +4,10 @@ XdMailCompiler::Application.routes.draw do
 
   resources :compiler do
     collection do
-      get :collect_assets # for a campaign
-      get :review_code # of a file
+         get :collect_assets # on page load - for campaign
+        post :select_assets  # ajax load in
+         get :review_code    # ajax review uploaded file
+      delete :delete_asset   # ajax remove asset and record
     end
   end
 
