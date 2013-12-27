@@ -9,7 +9,9 @@ $.fn.popover.Constructor.prototype.show = function () {
 var img;
 
 $(function () {
+
   $('#dropzone').fileupload({
+    dropZone: $(this),
     url: '/uploads',
     dataType: 'json',
     autoUpload: true,
@@ -23,6 +25,10 @@ $(function () {
     previewMaxWidth: 100,
     previewMaxHeight: 100,
     previewCrop: true
+  });
+
+  $(document).bind('drop dragover', function (e) {
+    e.preventDefault();
   });
 
   $('#image-assets li').popover({
@@ -42,6 +48,11 @@ $(function () {
   $('.fancybox').fancybox({
     openEffect: 'elastic'
   });
+  $('.fancybox-ajax').fancybox({
+          type: 'iframe',
+    openEffect: 'elastic'
+  });
+
 
 
 });

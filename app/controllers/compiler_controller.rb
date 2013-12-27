@@ -24,11 +24,8 @@ class CompilerController < ApplicationController
   end
 
   def review_code
-    @file = File.new("public#{params[:file][/[^?]+/]}")
-    render json: {
-      raw: @file.read,
-       sh: Compiler.syntax_highlight(@file, Compiler.get_ext(@file))
-    }
+    file = File.new("public#{params[:file]}")
+    @sh_code = Compiler.syntax_highlight(file, Compiler.get_ext(file))
   end
 
 private
