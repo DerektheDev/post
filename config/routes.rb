@@ -5,6 +5,7 @@ XdMailCompiler::Application.routes.draw do
   resources :compiler do
     collection do
       get :collect_assets # for a campaign
+      get :review_code # of a file
     end
   end
 

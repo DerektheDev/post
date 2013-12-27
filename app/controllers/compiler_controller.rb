@@ -13,6 +13,7 @@ class CompilerController < ApplicationController
 
   def collect_assets
     @campaign = Campaign.first
+    session[:campaign_id] ||= @campaign.id
 
     stylesheets = @campaign.stylesheets
     markup_docs = @campaign.markups
@@ -20,6 +21,14 @@ class CompilerController < ApplicationController
 
     get_styles File.new stylesheets.first.file.path
     get_markup File.new(markup_docs.first.file.path), File.new(stylesheets.first.file.path)
+  end
+
+  def review_code
+    @file = File.new("public#{params[:file][/[^?]+/]}")
+    render json: {
+      raw: @file.read,
+       sh: Compiler.syntax_highlight(@file, Compiler.get_ext(@file))
+    }
   end
 
 private

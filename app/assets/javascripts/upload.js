@@ -30,7 +30,7 @@ $(function () {
     placement: 'right',
     content: function(){
       img = "<img src='";
-      img += $(this).attr('href');
+      img += $(this).find('a').attr('data-thumb');
       img += "' />";
       return img;
     },
@@ -38,5 +38,10 @@ $(function () {
       $('.popover .popover-content').html(img);
     }
   })
+
+  $('.fancybox').fancybox({
+    openEffect: 'elastic'
+  });
+
 
 });
