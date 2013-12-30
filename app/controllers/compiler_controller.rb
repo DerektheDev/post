@@ -1,35 +1,35 @@
 class CompilerController < ApplicationController
 
   def index
-    # session[:campaign_id] = if session[:campaign_id] && Campaign.exists?(session[:campaign_id])
-    #   session[:campaign_id]
-    # else
-    #   Campaign.create.id
-    # end
-    # @campaign = Campaign.find(session[:campaign_id])
-
+    session[:campaign_id] ||= Campaign.first.id
+    session[:sel_mu_id]   ||= Asset.markups.first.id
+    session[:sel_ss_id]   ||= Asset.stylesheets.first.id
     collect_assets
   end
 
   def collect_assets
-    @campaign = Campaign.first
-    session[:campaign_id] ||= @campaign.id
+    @campaign    = Campaign.find(session[:campaign_id])
+    @stylesheets = @campaign.assets.stylesheets
+    @markup_docs = @campaign.assets.markups
+    @images      = @campaign.assets.images
 
-    stylesheets = @campaign.assets.stylesheets
-    markup_docs = @campaign.assets.markups
-    images      = @campaign.assets.images
+    @selected_stylesheet = @stylesheets.find(session[:sel_ss_id])
+    @selected_markup     = @markup_docs.find(session[:sel_mu_id])
 
-    get_styles File.new stylesheets.first.file.path
-    get_markup File.new(markup_docs.first.file.path), File.new(stylesheets.first.file.path)
+    get_styles File.new @selected_stylesheet.file.path
+    get_markup File.new(@selected_markup.file.path), File.new(@selected_stylesheet.file.path)
   end
 
   def review_code
-    file = File.new("public#{params[:file]}")
+    asset = Asset.find(params[:id])
+    file = File.new(strip_query "public#{asset.file.url}")
     @sh_code = Compiler.syntax_highlight(file, Compiler.get_ext(file))
   end
 
   def select_assets
-
+    session[:sel_mu_id] = params[:selected_markup] if params[:selected_markup]
+    session[:sel_ss_id] = params[:selected_stylesheet] if params[:selected_stylesheet]
+    collect_assets
   end
 
   def delete_asset

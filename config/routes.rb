@@ -4,14 +4,20 @@ XdMailCompiler::Application.routes.draw do
 
   resources :compiler do
     collection do
-         get :collect_assets # on page load - for campaign
-        post :select_assets  # ajax load in
+       get :collect_assets # on page load - for campaign
+      post :select_assets  # ajax load in
+    end
+    member do
          get :review_code    # ajax review uploaded file
       delete :delete_asset   # ajax remove asset and record
     end
   end
 
-  resources :uploads
+  resources :uploads do
+    collection do
+      get :append_files_to_view
+    end
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

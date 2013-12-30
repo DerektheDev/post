@@ -1,6 +1,5 @@
 class UploadsController < ApplicationController
   def create
-    # ap 'starting create'
     extension = Compiler.get_ext(params[:upload].original_filename)
     campaign = Campaign.find(session[:campaign_id])
 
@@ -11,7 +10,13 @@ class UploadsController < ApplicationController
       sort_and_create_files_for extension, campaign
     end
 
-    redirect_to collect_assets_compiler_index_path
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def append_files_to_view
+    
   end
 
 private
@@ -34,7 +39,7 @@ private
       if Asset.permitted_image_filetypes.include? extension
         @asset[:image] = params[:upload]
       else
-        @asset[:file] = params[:upload]
+        @asset.file = params[:upload]
       end
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
