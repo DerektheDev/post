@@ -1,0 +1,59 @@
+/ http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
+=# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
+  
+=form_tag select_assets_previews_path, id: :dropzone, remote: true, class: :row do
+  .col-sm-12
+    .row
+      .col-sm-8
+        %h4
+          %strong Upload files by dragging them onto the window
+          = file_field_tag :upload
+      .col-sm-4.1
+        .progress.progress-success.progress-striped.active
+          .bar{style: "width:10%;"}
+        / The loading indicator is shown during image processing
+        .fileupload-loading
+    .row
+      .col-sm-4
+        %h4
+          %i.fa.fa-picture-o
+          Image Assets
+        %table#image-assets.assets.table.table-striped.table-condensed
+          -@campaign.assets.images.each do |image|
+            =render "image_asset_row", locals: {image: image}
+      .col-sm-4
+        %h4
+          %i.fa.fa-code
+          Markup Assets
+        %table.assets#markup-assets.table.table-striped.table-condensed
+          -@campaign.assets.markups.each do |asset|
+            =render "code_asset_row", locals: {asset: asset, asset_type: :markup}
+      .col-sm-4
+        %h4
+          %i.fa.fa-leaf
+          Style Assets
+        %table.assets#style-assets.table.table-striped.table-condensed
+          -@campaign.assets.stylesheets.each do |asset|
+            =render "code_asset_row", locals: {asset: asset, asset_type: :stylesheet}
+.row
+  .col-sm-12
+    %h3 Output
+
+.row
+  .col-sm-6#compiled-source-preview=raw @shl_rendered_html
+  .col-sm-6#compiled-browser-preview=raw @rendered_html
+
+/ %hr
+
+/ .row
+/   .col-sm-12
+/     %h3 Input Markup
+/     .row
+/       .col-sm-5=raw @shl_input_markup_raw
+/       %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
+/       .col-sm-5=raw @shl_input_markup_to_html
+/     %h3 Input Styles
+/     .row
+/       .col-sm-5=raw @shl_input_styles_raw
+/       %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
+/       .col-sm-5=raw @shl_input_styles_to_css

@@ -1,22 +1,27 @@
 class UploadsController < ApplicationController
   def create
-    extension = Compiler.get_ext(params[:upload].original_filename)
+    file = params[:upload]
+    extension = Compiler.get_ext(file.original_filename)
     campaign = Campaign.find(session[:campaign_id])
 
     if extension == :zip
       # unzip zip file
-      # each file/sort/create
+      # require 'zip'
+      # temp_file = Zip::ZipFile.new("tmp/uploaded_assets/#{campaign.id}_#{Time.now.to_i}")
+      # temp_file.write(file.read)
+      # temp_file.close
+      # Zip::File.open(temp_file.path) do |zipfiles|
+      #   zipfiles.each do |file|
+      #     zfext = Compiler.get_ext file
+      #     sort_and_create_files_for zfext, campaign
+      #   end
+      # end
+      # ap temp_file
     else
       sort_and_create_files_for extension, campaign
     end
 
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def append_files_to_view
-    
+    redirect_to refresh_assets_previews_path
   end
 
 private
@@ -37,10 +42,11 @@ private
           extension: extension
       })
       if Asset.permitted_image_filetypes.include? extension
-        @asset[:image] = params[:upload]
+        @asset.image = params[:upload]
       else
         @asset.file = params[:upload]
       end
+      @asset.save
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
     end

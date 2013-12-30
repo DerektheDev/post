@@ -44,6 +44,7 @@ gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
 # APP UTILITIES
 gem 'coderay'   # syntax colorer
 gem 'paperclip' # file uploader
+gem 'rubyzip'
 
 
 # other junk that may be useful later

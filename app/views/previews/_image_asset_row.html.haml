@@ -1,0 +1,4 @@
+%tr
+  %td
+    =link_to image.file.url, {class: :fancybox, data: {thumb: image.file.url(:thumb)}} do
+      =strip_query(File.basename image.file.url)

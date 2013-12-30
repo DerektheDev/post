@@ -1,0 +1,5 @@
+%tr
+  %td
+    =radio_button_tag "selected_#{locals[:asset_type]}", locals[:asset].id
+    =link_to review_code_preview_path(locals[:asset].id), {class: 'fancybox-ajax'} do
+      =strip_query(File.basename locals[:asset].file.url)

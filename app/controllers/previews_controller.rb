@@ -1,4 +1,4 @@
-class CompilerController < ApplicationController
+class PreviewsController < ApplicationController
 
   def index
     session[:campaign_id] ||= Campaign.first.id
@@ -33,6 +33,10 @@ class CompilerController < ApplicationController
   end
 
   def delete_asset
+
+  end
+
+  def refresh_assets
 
   end
 

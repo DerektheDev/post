@@ -9,7 +9,7 @@
 campaign = Campaign.create
 
 seed_styles_path = "app/assets/stylesheets/test.css"
-seed_markup_path = "app/views/compiler/markup/example.html"
+seed_markup_path = "app/views/previews/markup/example.html"
 
 seed_styles = Asset.create({
   campaign_id: campaign.id,
