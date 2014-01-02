@@ -1,0 +1,12 @@
+[submodule "vendor/assets/fancyBox"]
+	path = vendor/assets/fancyBox
+	url = https://github.com/fancyapps/fancyBox.git
+[submodule "vendor/assets/jQuery-File-Upload"]
+	path = vendor/assets/jQuery-File-Upload
+	url = https://github.com/blueimp/jQuery-File-Upload.git
+[submodule "vendor/assets/lightbox2"]
+	path = vendor/assets/lightbox2
+	url = https://github.com/lokesh/lightbox2.git
+[submodule "vendor/assets/jquery-filedrop"]
+	path = vendor/assets/jquery-filedrop
+	url = https://github.com/weixiyen/jquery-filedrop.git
