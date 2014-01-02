@@ -4,15 +4,20 @@
 =form_tag select_assets_previews_path, id: :dropzone, remote: true, class: :row do
   .col-sm-12
     .row
-      .col-sm-8
-        %h4
+      .col-sm-6
+        %h5
           %strong Upload files by dragging them onto the window
           = file_field_tag :upload
-      .col-sm-4.1
+      .col-sm-4
         .progress.progress-success.progress-striped.active
           .bar{style: "width:10%;"}
         / The loading indicator is shown during image processing
         .fileupload-loading
+      = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-2 btn btn-xs btn-default'} do
+        Export assets for
+        %br
+        =image_tag 'eoa-favicon.png'
+        Email on Acid
     .row
       .col-sm-4
         %h4

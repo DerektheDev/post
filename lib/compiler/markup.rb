@@ -25,8 +25,8 @@ module Compiler
       #
 
       # each of these targets every other item... what the...?
-      # @tree_root = tree.root.children.first # skips straight to inside body tag
-      @tree_root = tree.root
+      @tree_root = tree.root.children.first # skips straight to inside body tag
+      # @tree_root = tree.root
 
       self.apply_styles @tree_root, @tree_root, styles_file
 

@@ -16,6 +16,12 @@ XdMailCompiler::Application.routes.draw do
 
   resources :uploads
 
+  resources :exports do
+    collection do
+      get :preflight_for_email_on_acid
+    end
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
