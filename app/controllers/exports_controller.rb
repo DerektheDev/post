@@ -18,8 +18,6 @@ class ExportsController < ApplicationController
         mu_file = File.new("public#{strip_query murecord.file.url}")
         ss_file = File.new("public#{strip_query stylesheets.first.file.url}")
         content = Compiler::Markup.render mu_file, ss_file
-
-        # z.print IO.read("public/#{strip_query(asset.file.url)}")
         z.print content.to_html
       end
     end
