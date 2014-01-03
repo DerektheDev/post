@@ -20,6 +20,11 @@ class ExportsController < ApplicationController
         content = Compiler::Markup.render mu_file, ss_file
         z.print content.to_html
       end
+      images.each do |imgrecord|
+        z.put_next_entry("images/#{imgrecord.image_file_name}")
+        img_file = File.new("public#{strip_query imgrecord.image.url}")
+        z.print IO.read(img_file)
+      end
     end
 
     send_file tmp_zip.path, type: 'application/zip',
