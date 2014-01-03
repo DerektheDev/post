@@ -46,13 +46,13 @@ $(function () {
   })
 
   $('.fancybox').fancybox({
-    openEffect: 'elastic',
-    title: function(){
-      rm_link = "<a href='/compiler/delete_asset?pcid=";
-      rm_link += $(this).attr('paperclip-id');
-      rm_link += "'>Delete Asset</a>";
-      return rm_link;
-    }
+    openEffect: 'elastic'//,
+    // title: function(){
+    //   rm_link = "<a href='/previews/delete_asset?pcid=";
+    //   rm_link += $(this).attr('paperclip-id');
+    //   rm_link += "'>Delete Asset</a>";
+    //   return rm_link;
+    // }
   });
   $('.fancybox-ajax').fancybox({
          type: 'iframe',

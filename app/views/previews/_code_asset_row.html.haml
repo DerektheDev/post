@@ -1,5 +1,9 @@
 %tr
   %td
-    =radio_button_tag "selected_#{locals[:asset_type]}", locals[:asset].id
+    -if locals[:asset_type] == :markup
+      =radio_button_tag "selected_#{locals[:asset_type]}", locals[:asset].id
     =link_to review_code_preview_path(locals[:asset].id), {class: 'fancybox-ajax'} do
       =strip_query(File.basename locals[:asset].file.url)
+  %td
+    =link_to delete_asset_preview_path(locals[:asset].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete} do
+      %i.fa.fa-trash-o

@@ -33,7 +33,11 @@ class PreviewsController < ApplicationController
   end
 
   def delete_asset
-
+    asset = Asset.find params[:id]
+    asset.image, asset.file = nil, nil
+    asset.save
+    asset.destroy
+    redirect_to previews_path
   end
 
   def refresh_assets
