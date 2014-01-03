@@ -2,7 +2,7 @@ class Asset < ActiveRecord::Base
   
   belongs_to :campaign
 
-  has_attached_file :file, default_url: "/images/:style/missing.png"
+  has_attached_file :file, default_url: "/files/:style/missing.png"
   has_attached_file :image, styles: {medium: '300x300', thumb: '100x100'}, default_url: "/images/:style/missing.png"
 
   # SCOPE
@@ -27,6 +27,17 @@ class Asset < ActiveRecord::Base
     else
       :nonpermitted
     end
+  end
+
+  def self.app_relative_paths nokogiri_tree, campaign
+    image_nodes = nokogiri_tree.css('img')
+    image_nodes.each do |img|
+      proper_file = campaign.assets.find_by image_file_name: img[:src]
+      new_path = "#{proper_file.image.url[/[^?]+/]}"
+      img[:src] = new_path
+# imgsadfkjsf
+    end
+    nokogiri_tree
   end
 
 private

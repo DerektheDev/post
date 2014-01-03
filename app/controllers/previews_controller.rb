@@ -54,8 +54,9 @@ private
     @input_markup_raw         = File.read markup_file
     @shl_input_markup_raw     = Compiler.syntax_highlight @input_markup_raw, Compiler.get_ext(markup_file)
     @shl_input_markup_to_html = Compiler.syntax_highlight(Compiler::Markup.build_tree(markup_file).to_html, :html)
-    @rendered_html            = Compiler::Markup.render   markup_file, styles_file
-    @shl_rendered_html        = Compiler.syntax_highlight @rendered_html, :html
+    rendered_html             = Compiler::Markup.render markup_file, styles_file
+    @rendered_html_app_imgs   = Asset.app_relative_paths(rendered_html.dup, @campaign)
+    @shl_rendered_html        = Compiler.syntax_highlight rendered_html, :html
   end
   
 end

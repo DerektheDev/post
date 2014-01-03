@@ -1,4 +1,4 @@
 %tr
   %td
-    =link_to locals[:image].file.url, {class: :fancybox, data: {thumb: locals[:image].file.url(:thumb)}} do
-      =strip_query(File.basename locals[:image].file.url)
+    =link_to locals[:image].image.url, {class: :fancybox, data: {thumb: locals[:image].image.url(:thumb)}} do
+      =strip_query(File.basename locals[:image].image.url)
