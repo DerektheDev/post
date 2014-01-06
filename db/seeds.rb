@@ -6,18 +6,26 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-campaign = Campaign.create
+seed_styles_path   = "app/assets/stylesheets/test.css"
+seed_markup_path   = "app/views/resources/markup/example.html"
+seed_markup_path_2 = "app/views/resources/markup/example.haml"
 
-seed_styles_path = "app/assets/stylesheets/test.css"
-seed_markup_path = "app/views/resources/markup/example.html"
+10.times do
+  campaign = Campaign.create
 
-seed_styles = Resource.create({
-  campaign_id: campaign.id,
-    extension: Compiler.get_ext(File.new seed_styles_path),
-         file: File.new(seed_styles_path)
-})
-seed_markup = Resource.create({
-  campaign_id: campaign.id,
-    extension: Compiler.get_ext(File.new seed_markup_path),
-         file: File.new(seed_markup_path)
-})
+  seed_styles = Resource.create({
+    campaign_id: campaign.id,
+      extension: Compiler.get_ext(File.new seed_styles_path),
+           file: File.new(seed_styles_path)
+  })
+  seed_markup = Resource.create({
+    campaign_id: campaign.id,
+      extension: Compiler.get_ext(File.new seed_markup_path),
+           file: File.new(seed_markup_path)
+  })
+  seed_markup_2 = Resource.create({
+    campaign_id: campaign.id,
+      extension: Compiler.get_ext(File.new seed_markup_path_2),
+           file: File.new(seed_markup_path_2)
+  })
+end

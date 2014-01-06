@@ -6,10 +6,8 @@ XdMailCompiler::Application.routes.draw do
 
   resources :resources do
     collection do
-       get :collect # on page load - for campaign
+       get :collect # for campaign
        # get :refresh # upload new file
-    end
-    member do
       post :select  # ajax load in
     end
   end

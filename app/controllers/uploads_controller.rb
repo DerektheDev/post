@@ -21,7 +21,7 @@ class UploadsController < ApplicationController
       sort_and_create_files_for extension, campaign
     end
 
-    redirect_to assets_path
+    redirect_to campaign_path(session[:campaign_id])
   end
 
 private
@@ -42,11 +42,11 @@ private
           extension: extension
       })
       if Resource.permitted_image_filetypes.include? extension
-        @asset.image = params[:upload]
+        @resource.image = params[:upload]
       else
-        @asset.file = params[:upload]
+        @resource.file = params[:upload]
       end
-      @asset.save
+      @resource.save
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
     end

@@ -31,7 +31,7 @@ $(function () {
     e.preventDefault();
   });
 
-  $('#image-assets li').popover({
+  $('#image-resources li').popover({
     trigger: 'hover',
     placement: 'right',
     content: function(){
@@ -64,7 +64,7 @@ $(function () {
     function(){ $(this).removeClass('btn-danger') }
   )
 
-  $('.assets input[type=radio]').click(function(){
+  $('.resources input[type=radio]').click(function(){
     $(this).closest('form').submit();
   })
 

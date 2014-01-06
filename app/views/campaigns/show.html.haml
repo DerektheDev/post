@@ -1,7 +1,7 @@
 / http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
 =# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
   
-=form_tag select_resource_path, id: :dropzone, remote: true, class: :row do
+=form_tag select_resources_path, id: :dropzone, remote: true, class: :row do
   .col-sm-12
     .row
       .col-sm-6
@@ -45,20 +45,5 @@
     %h3 Output
 
 .row
-  .col-sm-6#compiled-source-preview=raw @shl_rendered_html
-  .col-sm-6#compiled-browser-preview=raw @rendered_html_app_imgs
-
-/ %hr
-
-/ .row
-/   .col-sm-12
-/     %h3 Input Markup
-/     .row
-/       .col-sm-5=raw @shl_input_markup_raw
-/       %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
-/       .col-sm-5=raw @shl_input_markup_to_html
-/     %h3 Input Styles
-/     .row
-/       .col-sm-5=raw @shl_input_styles_raw
-/       %i.fa.fa-5x.fa-chevron-circle-right.col-sm-2.c-mid
-/       .col-sm-5=raw @shl_input_styles_to_css
+  .col-sm-6#compiled-source-preview
+  .col-sm-6#compiled-browser-preview
