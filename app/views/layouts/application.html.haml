@@ -11,8 +11,11 @@
     = javascript_include_tag  '//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js',          |
                               'http://code.jquery.com/ui/1.10.3/jquery-ui.min.js',                      |
                               '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js', |
-                              'source/jquery.fancybox.pack.js',
-                              'js/vendor/jquery.ui.widget', 'js/jquery.fileupload', 'upload'
+                              'source/jquery.fancybox.pack.js', |
+                              'js/vendor/jquery.ui.widget',     |
+                              'global'
+    = yield :javascripts
+    = yield :stylesheets
     = csrf_meta_tags
   %body
     .container

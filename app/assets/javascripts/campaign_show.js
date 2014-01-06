@@ -1,15 +1,6 @@
-var tmp = $.fn.popover.Constructor.prototype.show;
-$.fn.popover.Constructor.prototype.show = function () {
-  tmp.call(this);
-  if (this.options.callback) {
-    this.options.callback();
-  }
-}
-
 var img;
 
 $(function () {
-
   $('#dropzone').fileupload({
     dropZone: $(this),
     url: '/uploads',
@@ -44,25 +35,6 @@ $(function () {
       $('.popover .popover-content').html(img);
     }
   })
-
-  $('.fancybox').fancybox({
-    openEffect: 'elastic'//,
-    // title: function(){
-    //   rm_link = "<a href='/previews/delete_asset?pcid=";
-    //   rm_link += $(this).attr('paperclip-id');
-    //   rm_link += "'>Delete Asset</a>";
-    //   return rm_link;
-    // }
-  });
-  $('.fancybox-ajax').fancybox({
-         type: 'iframe',
-   openEffect: 'elastic'
-  });
-
-  $('.danger-hover').hover(
-    function(){ $(this).addClass('btn-danger') },
-    function(){ $(this).removeClass('btn-danger') }
-  )
 
   $('.resources input[type=radio]').click(function(){
     $(this).closest('form').submit();

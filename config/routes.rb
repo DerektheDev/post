@@ -2,7 +2,11 @@ XdMailCompiler::Application.routes.draw do
 
   root 'campaigns#index'
 
-  resources :campaigns
+  resources :campaigns do
+    member do
+      get :preview
+    end
+  end
 
   resources :resources do
     collection do

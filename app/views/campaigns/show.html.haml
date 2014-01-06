@@ -1,7 +1,11 @@
 / http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
 =# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
+
+-content_for :javascripts do
+  =javascript_include_tag 'js/jquery.fileupload',           |
+                          'campaign_show'
   
-=form_tag select_resources_path, id: :dropzone, remote: true, class: :row do
+=form_tag select_resources_path, id: :dropzone, remote: true do
   .col-sm-12
     .row
       .col-sm-6

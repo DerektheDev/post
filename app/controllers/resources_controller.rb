@@ -17,17 +17,17 @@ class ResourcesController < ApplicationController
 
   def select
     session[:sel_mu_id] = params[:selected_markup] if params[:selected_markup]
-    collect @campaign.id
+    collect
     respond_to do |format|
       format.js
     end
   end
 
   def collect
-    campaign = Campaign.find(params[:cid])
-    @stylesheets = campaign.resources.stylesheets
-    @markup_docs = campaign.resources.markups
-    @images      = campaign.resources.images
+    @campaign  ||= Campaign.find(session[:campaign_id])
+    @stylesheets = @campaign.resources.stylesheets
+    @markup_docs = @campaign.resources.markups
+    @images      = @campaign.resources.images
 
     @selected_stylesheet = @stylesheets.find(session[:sel_ss_id])
     @selected_markup     = @markup_docs.find(session[:sel_mu_id])
