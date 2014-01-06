@@ -21,7 +21,7 @@ class UploadsController < ApplicationController
       sort_and_create_files_for extension, campaign
     end
 
-    redirect_to refresh_assets_previews_path
+    redirect_to assets_path
   end
 
 private
@@ -34,14 +34,14 @@ private
 
   def sort_and_create_files_for extension, campaign
 
-    asset_type = Asset.get_asset_type extension
+    asset_type = Resource.get_resource_type extension
 
-    if Asset.permitted_filetypes.include? extension
-      @asset = Asset.create({
+    if Resource.permitted_filetypes.include? extension
+      @resource = Resource.create({
         campaign_id: session[:campaign_id],
           extension: extension
       })
-      if Asset.permitted_image_filetypes.include? extension
+      if Resource.permitted_image_filetypes.include? extension
         @asset.image = params[:upload]
       else
         @asset.file = params[:upload]

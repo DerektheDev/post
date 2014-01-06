@@ -1,7 +1,7 @@
 / http://www.techdarkside.com/adding-drag-and-drop-file-uploads-to-rails-3-1-with-filedrop-and-paperclip
 =# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
   
-=form_tag select_assets_previews_path, id: :dropzone, remote: true, class: :row do
+=form_tag select_resource_path, id: :dropzone, remote: true, class: :row do
   .col-sm-12
     .row
       .col-sm-6
@@ -14,7 +14,7 @@
         / The loading indicator is shown during image processing
         .fileupload-loading
       = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-2 btn btn-xs btn-default'} do
-        Export assets for
+        Export resources for
         %br
         =image_tag 'eoa-favicon.png'
         Email on Acid
@@ -22,24 +22,24 @@
       .col-sm-4
         %h4
           %i.fa.fa-picture-o
-          Image Assets
-        %table#image-assets.assets.table.table-striped.table-condensed
-          -@campaign.assets.images.each do |image|
-            =render "image_asset_row", locals: {image: image}
+          Image Resources
+        %table#image-resources.resources.table.table-striped.table-condensed
+          -@campaign.resources.images.each do |image|
+            =render "image_resource_row", locals: {image: image}
       .col-sm-4
         %h4
           %i.fa.fa-code
-          Markup Assets
-        %table.assets#markup-assets.table.table-striped.table-condensed
-          -@campaign.assets.markups.each do |asset|
-            =render "code_asset_row", locals: {asset: asset, asset_type: :markup}
+          Markup Resources
+        %table.resources#markup-resources.table.table-striped.table-condensed
+          -@campaign.resources.markups.each do |resource|
+            =render "code_resource_row", locals: {resource: resource, resource_type: :markup}
       .col-sm-4
         %h4
           %i.fa.fa-leaf
-          Style Assets
-        %table.assets#style-assets.table.table-striped.table-condensed
-          -@campaign.assets.stylesheets.each do |asset|
-            =render "code_asset_row", locals: {asset: asset, asset_type: :stylesheet}
+          Style Resources
+        %table.resources#style-resources.table.table-striped.table-condensed
+          -@campaign.resources.stylesheets.each do |resource|
+            =render "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
 .row
   .col-sm-12
     %h3 Output

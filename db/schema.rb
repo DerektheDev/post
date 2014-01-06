@@ -13,7 +13,13 @@
 
 ActiveRecord::Schema.define(version: 20131227212705) do
 
-  create_table "assets", force: true do |t|
+  create_table "campaigns", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "resources", force: true do |t|
     t.integer  "campaign_id"
     t.string   "extension"
     t.string   "file_file_name"
@@ -24,35 +30,6 @@ ActiveRecord::Schema.define(version: 20131227212705) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "campaigns", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "markups", force: true do |t|
-    t.string   "extension"
-    t.text     "preprocessed"
-    t.text     "postprocessed"
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "stylesheets", force: true do |t|
-    t.string   "extension"
-    t.text     "preprocessed"
-    t.text     "postprocessed"
-    t.string   "file_file_name"
-    t.string   "file_content_type"
-    t.integer  "file_file_size"
-    t.datetime "file_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

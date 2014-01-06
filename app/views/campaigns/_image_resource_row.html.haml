@@ -3,5 +3,5 @@
     =link_to locals[:image].image.url, {class: :fancybox, data: {thumb: locals[:image].image.url(:thumb)}} do
       =strip_query(File.basename locals[:image].image.url)
   %td
-    =link_to delete_asset_preview_path(locals[:image].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete} do
+    =link_to resource_path(locals[:image].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete} do
       %i.fa.fa-trash-o

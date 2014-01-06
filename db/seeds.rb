@@ -9,14 +9,14 @@
 campaign = Campaign.create
 
 seed_styles_path = "app/assets/stylesheets/test.css"
-seed_markup_path = "app/views/previews/markup/example.html"
+seed_markup_path = "app/views/resources/markup/example.html"
 
-seed_styles = Asset.create({
+seed_styles = Resource.create({
   campaign_id: campaign.id,
     extension: Compiler.get_ext(File.new seed_styles_path),
          file: File.new(seed_styles_path)
 })
-seed_markup = Asset.create({
+seed_markup = Resource.create({
   campaign_id: campaign.id,
     extension: Compiler.get_ext(File.new seed_markup_path),
          file: File.new(seed_markup_path)

@@ -1,16 +1,16 @@
 XdMailCompiler::Application.routes.draw do
 
-  root 'previews#index'
+  root 'campaigns#index'
 
-  resources :previews do
+  resources :campaigns
+
+  resources :resources do
     collection do
-       get :collect_assets # on page load - for campaign
-      post :select_assets  # ajax load in
-       get :refresh_assets # upload new file
+       get :collect # on page load - for campaign
+       # get :refresh # upload new file
     end
     member do
-         get :review_code    # ajax review uploaded file
-      delete :delete_asset   # ajax remove asset and record
+      post :select  # ajax load in
     end
   end
 

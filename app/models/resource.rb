@@ -1,4 +1,4 @@
-class Asset < ActiveRecord::Base
+class Resource < ActiveRecord::Base
   
   belongs_to :campaign
 
@@ -10,7 +10,7 @@ class Asset < ActiveRecord::Base
 
 
   # SCOPE
-  # seed_styles[:asset_type]   = Asset.get_asset_type seed_styles[:extension]
+  # seed_styles[:resource_type]   = Resource.get_resource_type seed_styles[:extension]
   scope :stylesheets, lambda { where(extension: permitted_stylesheet_filetypes) }
   scope :markups,     lambda { where(extension: permitted_markup_filetypes)     }
   scope :images,      lambda { where(extension: permitted_image_filetypes)      }
@@ -20,13 +20,13 @@ class Asset < ActiveRecord::Base
     (self.permitted_image_filetypes | self.permitted_markup_filetypes | self.permitted_stylesheet_filetypes)
   end
 
-  def self.get_asset_type extension
+  def self.get_resource_type extension
     case extension
-    when Asset.permitted_markup_filetypes
+    when self.permitted_markup_filetypes
       :markup
-    when Asset.permitted_stylesheet_filetypes
+    when self.permitted_stylesheet_filetypes
       :stylesheet
-    when Asset.permitted_image_filetypes
+    when self.permitted_image_filetypes
       :image
     else
       :nonpermitted
@@ -36,10 +36,10 @@ class Asset < ActiveRecord::Base
   def self.app_relative_paths nokogiri_tree, campaign
     image_nodes = nokogiri_tree.css('img')
     image_nodes.each do |img|
-      new_path = if (proper_file = campaign.assets.find_by image_file_name: File.basename(img[:src]))
+      new_path = if (proper_file = campaign.resources.find_by image_file_name: File.basename(img[:src]))
         "#{proper_file.image.url[/[^?]+/]}"
       else
-        "assets/missing_img.jpg"
+        "resources/missing_img.jpg"
       end
       img[:src] = new_path
 # imgsadfkjsf

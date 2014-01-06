@@ -1,6 +1,6 @@
-class CreateAssets < ActiveRecord::Migration
+class CreateResources < ActiveRecord::Migration
   def change
-    create_table :assets do |t|
+    create_table :resources do |t|
       t.references :campaign
       t.string     :extension
       t.attachment :file

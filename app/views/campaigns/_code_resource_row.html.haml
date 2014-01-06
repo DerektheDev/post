@@ -1,0 +1,9 @@
+%tr
+  %td
+    -if locals[:resource_type] == :markup
+      =radio_button_tag "selected_#{locals[:resource_type]}", locals[:resource].id
+    =link_to resource_path(locals[:resource].id), {class: 'fancybox-ajax'} do
+      =strip_query(File.basename locals[:resource].file.url)
+  %td
+    =link_to resource_path(locals[:resource].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete} do
+      %i.fa.fa-trash-o
