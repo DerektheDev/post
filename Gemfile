@@ -28,7 +28,7 @@ gem 'haml'
 gem 'thin'
 gem 'bourbon'
 gem 'debugger'
-gem 'pry'
+# gem 'pry'
 
 #
 # PARSING GEMS
@@ -44,7 +44,8 @@ gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
 # APP UTILITIES
 gem 'coderay'   # syntax colorer
 gem 'paperclip' # file uploader
-gem 'rubyzip'
+gem 'rubyzip'   # zip library
+gem 'selenium-webdriver' # web crawler for screenshots
 
 
 # other junk that may be useful later

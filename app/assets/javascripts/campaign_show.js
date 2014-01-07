@@ -1,6 +1,7 @@
 var img;
 
 $(function () {
+  // file upload drag and drop
   $('#dropzone').fileupload({
     dropZone: $(this),
     url: '/uploads',
@@ -22,6 +23,7 @@ $(function () {
     e.preventDefault();
   });
 
+  // image resource preview
   $('#image-resources li').popover({
     trigger: 'hover',
     placement: 'right',
@@ -36,8 +38,15 @@ $(function () {
     }
   })
 
+  // load selected resource in view
   $('.resources input[type=radio]').click(function(){
     $(this).closest('form').submit();
   })
+
+  // retrieve screenshot for a link
+  // $('#compiled-browser-preview').on('click', 'a', function(e){
+  //   alert('klik');
+  //   e.preventDefault();
+  // });
 
 });
