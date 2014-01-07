@@ -3,8 +3,7 @@
 
 .row
   .col-sm-6
-    .well
-      %h2 Choose your Campaign
+    %h2 Choose your Campaign
     #campaign-preview
   .col-sm-6
     %table.table.table-striped.table-condensed
@@ -13,10 +12,14 @@
           %th Campaign Name
           %th Actions
       %tbody
-        -@campaigns.each do |campaign|
+        %tr
+          %td{colspan: 2}
+            = form_for :campaign, url: {action: :create}, html: {class: 'form-inline'} do |f|
+              .form-group= f.text_field :name, value: nil, class: 'form-control'
+              .form-group= f.submit "Create New Campaign", class: 'btn btn-default btn-xs form-control'
+        - @campaigns.each do |campaign|
           %tr
             %td= link_to campaign.name, campaign_path(campaign.id)
             %td
-              .btn{class: 'preview btn btn-xs btn-default', cid: campaign.id}
-                Preview Campaign
-              = link_to 'Delete Campaign', campaign_path(campaign.id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, confirm: "Are you certain you want to delete this campaign? You can't get it back!"}
+              = link_to 'Preview', preview_campaign_path(campaign.id), {class: 'preview campaign btn btn-xs btn-default', remote: true}
+              = link_to 'Delete', campaign_path(campaign.id), {class: 'delete campaign btn btn-xs btn-default danger-hover', method: :delete, data: {confirm: "Are you certain you want to delete this campaign? You can't get it back!"}}

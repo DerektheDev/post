@@ -3,20 +3,17 @@ XdMailCompiler::Application.routes.draw do
   root 'campaigns#index'
 
   resources :campaigns do
+    collection do
+       # get :refresh # upload new file
+       get :collect_resources # for campaign
+      post :select_resource   # ajax load in
+    end
     member do
       get :preview
     end
   end
 
-  resources :resources do
-    collection do
-       get :collect # for campaign
-       # get :refresh # upload new file
-      post :select  # ajax load in
-    end
-  end
-
-  resources :uploads
+  resources :resources, :uploads
 
   resources :exports do
     collection do
