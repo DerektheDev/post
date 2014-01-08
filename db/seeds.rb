@@ -6,33 +6,23 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-seed_styles_path   = "app/assets/stylesheets/test.css"
-seed_markup_path   = "app/views/resources/markup/example.html"
-seed_markup_path_2 = "app/views/resources/markup/example.haml"
+# seed_styles = %w[reset.css reset_1.css global.css global_1.scss california.css california_1.css global_head.css global_head.css california_head.css california_head_1.css]
+seed_styles  = Dir.glob "app/assets/stylesheets/seed_styles"
+seed_markups = Dir.glob "app/views/resources/seed_markups"
 
 campaign = Campaign.create({name: "Seed Campaign"})
 
-seed_styles = Resource.create({
-     campaign: campaign,
-    extension: Compiler.get_ext(File.new seed_styles_path),
-         file: File.new(seed_styles_path)
-})
-seed_markup = Resource.create({
-     campaign: campaign,
-    extension: Compiler.get_ext(File.new seed_markup_path),
-         file: File.new(seed_markup_path)
-})
-seed_markup_2 = Resource.create({
-     campaign: campaign,
-    extension: Compiler.get_ext(File.new seed_markup_path_2),
-         file: File.new(seed_markup_path_2)
-})
+[seed_styles, seed_markups].each do |seed_file_dir|
+  seed_file_dir.each do |file_path|
+    unless File.directory? file_path
+      file = File.new(file_path)
 
-
-%w[reset.css reset_1.css global.css global_1.css california.css california_1.css global_head.css global_head.css california_head.css california_head_1.css].each do |ss|
-  Resource.create({
-    file_file_name: ss,
-          campaign: campaign,
-         extension: ss.split('.').last.to_sym
-  })
+      Resource.create({
+         campaign: campaign,
+        extension: Compiler.get_ext(file),
+             file: file
+      })
+    end
+  end
 end
+
