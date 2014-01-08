@@ -35,11 +35,12 @@ class CampaignsController < ApplicationController
     @markup_docs = @campaign.resources.markups
     @images      = @campaign.resources.images
 
+    # @selected_stylesheet = @stylesheets.first
     @selected_stylesheet = @stylesheets.first
     @selected_markup     = @markup_docs.find(session[:sel_mu_id])
 
-    get_styles File.new @selected_stylesheet.file.path
-    get_markup File.new(@selected_markup.file.path), File.new(@selected_stylesheet.file.path)
+    # get_styles File.new @selected_stylesheet.file.path
+    get_markup File.new(@selected_markup.file.path)
   end
 
   def select_resource
@@ -60,11 +61,21 @@ class CampaignsController < ApplicationController
     @shl_rendered_css         = Compiler.syntax_highlight @rendered_css, :css
   end
 
-  def get_markup markup_file, styles_file
+  def get_markup markup_file
+    @campaign = Campaign.find(session[:campaign_id])
+
+    head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
+      File.new("public#{pca.file.url}") # pca = paperclip attachment
+    end
+
+ap head_stylesheets
+
+    inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map(&:file)
+
     @input_markup_raw         = File.read markup_file
     @shl_input_markup_raw     = Compiler.syntax_highlight @input_markup_raw, Compiler.get_ext(markup_file)
     @shl_input_markup_to_html = Compiler.syntax_highlight(Compiler::Markup.build_tree(markup_file).to_html, :html)
-    rendered_html             = Compiler::Markup.render markup_file, styles_file
+    rendered_html             = Compiler::Markup.render markup_file, inline_stylesheets
     @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
     @shl_rendered_html        = Compiler.syntax_highlight rendered_html, :html
   end

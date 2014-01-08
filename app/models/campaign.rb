@@ -2,7 +2,7 @@ class Campaign < ActiveRecord::Base
 
   has_many :resources
 
-  def ordered_resources markup_name, scope = "all"
+  def ordered_stylesheets markup_name, scope = "all"
     # what is the markup document? e.g. california.html
     filename_string = markup_name.split('.').first
 
@@ -11,7 +11,7 @@ class Campaign < ActiveRecord::Base
 
     # return an array of requested resources in the proper parsing order
     o = []
-    patterns_array = resources_sorting_patterns(markup_name, scope)
+    patterns_array = stylesheet_sorting_patterns(markup_name, scope)
     patterns_array.each do |query|
       if matches = resources.where("file_file_name like ?", query)
         matches.each do |match|
@@ -22,7 +22,7 @@ class Campaign < ActiveRecord::Base
     o
   end
 
-  def resources_sorting_patterns markup_name, scope = "all"
+  def stylesheet_sorting_patterns markup_name, scope = "all"
     # ORDER OF COMPILATION/SPECIFICITY
     #   BODY:
     #     reset.css, reset_1.css, global.css, global_1.css
@@ -37,7 +37,7 @@ class Campaign < ActiveRecord::Base
         "#{markup_name}_head.%",
         "#{markup_name}_head_%.%"
       ],
-      body: [
+      inline: [
         "reset.%",
         "reset_%.%",
         "global.%",
@@ -47,10 +47,10 @@ class Campaign < ActiveRecord::Base
       ]
     }
     patterns = case scope
-    when "head", "body"
+    when "head", "inline"
       scopes[scope.to_sym]
     else
-      (scopes[:head] | scopes[:body])
+      (scopes[:head] | scopes[:inline])
     end
     patterns
   end

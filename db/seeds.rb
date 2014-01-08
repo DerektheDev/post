@@ -13,17 +13,17 @@ seed_markup_path_2 = "app/views/resources/markup/example.haml"
 campaign = Campaign.create({name: "Seed Campaign"})
 
 seed_styles = Resource.create({
-  campaign_id: campaign.id,
+     campaign: campaign,
     extension: Compiler.get_ext(File.new seed_styles_path),
          file: File.new(seed_styles_path)
 })
 seed_markup = Resource.create({
-  campaign_id: campaign.id,
+     campaign: campaign,
     extension: Compiler.get_ext(File.new seed_markup_path),
          file: File.new(seed_markup_path)
 })
 seed_markup_2 = Resource.create({
-  campaign_id: campaign.id,
+     campaign: campaign,
     extension: Compiler.get_ext(File.new seed_markup_path_2),
          file: File.new(seed_markup_path_2)
 })
@@ -32,7 +32,7 @@ seed_markup_2 = Resource.create({
 %w[reset.css reset_1.css global.css global_1.css california.css california_1.css global_head.css global_head.css california_head.css california_head_1.css].each do |ss|
   Resource.create({
     file_file_name: ss,
-       campaign_id: campaign.id,
+          campaign: campaign,
          extension: ss.split('.').last.to_sym
   })
 end

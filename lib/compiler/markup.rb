@@ -13,22 +13,18 @@ module Compiler
       tree
     end
 
-    def self.render markup_file, styles_file
+    def self.render markup_file, stylesheet_files
 
       tree = self.build_tree markup_file
-
-      #
-      # For media queries, we'll probably have to open the document,
-      # quarantine the media queries out of the file (into a separate
-      # array), and then place them in the head of the document when
-      # finished.
-      #
-
-      # each of these targets every other item... what the...?
+      
       @tree_root = tree.root.children.first # skips straight to inside body tag
       # @tree_root = tree.root
 
-      self.apply_styles @tree_root, @tree_root, styles_file
+      # apply the styles for each stylesheet, in the
+      # order in which they are passed
+      stylesheet_files.each do |ss|
+        self.apply_styles @tree_root, @tree_root, ss
+      end
 
       output_markup = @tree_root
     end
