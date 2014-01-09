@@ -4,9 +4,9 @@ class ExportsController < ApplicationController
     require 'zip'
 
     @campaign   = Campaign.find(session[:campaign_id])
-    stylesheets = @campaign.assets.stylesheets
-    markup_docs = @campaign.assets.markups
-    images      = @campaign.assets.images
+    stylesheets = @campaign.resources.stylesheets
+    markup_docs = @campaign.resources.markups
+    images      = @campaign.resources.images
 
     master_zip_file_name = "#{@campaign.name.parameterize rescue 'campaign'}_#{DateTime.now.strftime("%d%m%Y%H%M%S")}"
 

@@ -11,9 +11,9 @@ class Campaign < ActiveRecord::Base
 
     # return an array of requested resources in the proper parsing order
     o = []
-    patterns_array = stylesheet_sorting_patterns(markup_name, scope)
+    patterns_array = stylesheet_sorting_patterns(filename_string, scope)
     patterns_array.each do |query|
-      if matches = resources.where("file_file_name like ?", query)
+      if matches = resources.stylesheets.where("file_file_name LIKE ?", query)
         matches.each do |match|
           o.push match
         end
@@ -32,18 +32,18 @@ class Campaign < ActiveRecord::Base
     #     california_head.css, california_head_1.css
     scopes = {
       head: [
-        "global_head.%",
-        "global_head_%.%",
-        "#{markup_name}_head.%",
-        "#{markup_name}_head_%.%"
+        "global_head\.%",
+        "global_head_[0-9]*\.%",
+        "#{markup_name}_head\.%",
+        "#{markup_name}_head_[0-9]*\.%"
       ],
       inline: [
-        "reset.%",
-        "reset_%.%",
-        "global.%",
-        "global_%.%",
-        "#{markup_name}.%",
-        "#{markup_name}_%.%"
+        "reset\.%",
+        "reset_[0-9]*\.%",
+        "global\.%",
+        "global_[0-9]*\.%",
+        "#{markup_name}\.%",
+        "#{markup_name}_[0-9]*\.%"
       ]
     }
     patterns = case scope

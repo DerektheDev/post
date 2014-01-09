@@ -1,0 +1,5 @@
+@media (max-width: 699px) and (min-width: 520px) {
+  body {
+    background: #0ff;
+  }
+}

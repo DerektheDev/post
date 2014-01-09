@@ -5,5 +5,5 @@
     =link_to resource_path(locals[:resource].id), {class: 'fancybox-ajax'} do
       =strip_query(File.basename locals[:resource].file.url)
   %td
-    =link_to resource_path(locals[:resource].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, confirm: "Are you certain you want to remove this resource from this campaign? You cannot undo this."} do
+    =link_to resource_path(locals[:resource].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, data:{confirm: "Are you certain you want to remove this resource from this campaign? You cannot undo this."}} do
       %i.fa.fa-trash-o

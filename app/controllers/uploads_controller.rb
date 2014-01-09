@@ -7,7 +7,7 @@ class UploadsController < ApplicationController
     if extension == :zip
       # unzip zip file
       # require 'zip'
-      # temp_file = Zip::ZipFile.new("tmp/uploaded_assets/#{campaign.id}_#{Time.now.to_i}")
+      # temp_file = Zip::ZipFile.new("tmp/uploaded_resources/#{campaign.id}_#{Time.now.to_i}")
       # temp_file.write(file.read)
       # temp_file.close
       # Zip::File.open(temp_file.path) do |zipfiles|

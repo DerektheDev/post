@@ -1,14 +1,18 @@
 class CampaignsController < ApplicationController
+
+  before_filter :get_campaign, only: [:show, :destroy, :collect_resources, :select_resource]
+
+  def get_campaign
+    campaign_id = params[:id] || session[:campaign_id]
+    @campaign = Campaign.find(campaign_id)
+  end
+
   def index
     @campaigns = Campaign.order(:created_at).reverse_order
-    @campaign  = @campaigns.first
   end
 
   def show
-    @campaign = Campaign.find(params[:id])
-    session[:campaign_id] = @campaign.id
-    # session[:sel_mu_id]   ||= @campaign.resources.markups.first.id
-    # session[:sel_ss_id]   ||= @campaign.resources.stylesheets.first.id
+    session[:campaign_id] = params[:id]
   end
 
   def preview
@@ -24,13 +28,12 @@ class CampaignsController < ApplicationController
   end
 
   def destroy
-    campaign = Campaign.find(params[:id])
-    campaign.destroy
+    @campaign.destroy
     redirect_to :back
   end
 
   def collect_resources
-    @campaign  ||= Campaign.find(params[:id])
+    # @campaign  ||= Campaign.find(params[:id])
     @stylesheets = @campaign.resources.stylesheets
     @markup_docs = @campaign.resources.markups
     @images      = @campaign.resources.images
@@ -44,8 +47,6 @@ class CampaignsController < ApplicationController
   end
 
   def select_resource
-    ap params
-    @campaign  ||= Campaign.find(session[:campaign_id])
     session[:sel_mu_id] = params[:selected_markup] if params[:selected_markup]
     collect_resources
     respond_to do |format|
@@ -64,13 +65,14 @@ class CampaignsController < ApplicationController
   def get_markup markup_file
     @campaign = Campaign.find(session[:campaign_id])
 
-    head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
-      File.new("public#{pca.file.url}") # pca = paperclip attachment
+    # head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
+    #   File.new("public#{strip_query pca.file.url}") # pca = paperclip attachment
+    # end
+    inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map do |pca|
+      File.new("public#{strip_query pca.file.url}")
     end
 
-ap head_stylesheets
-
-    inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map(&:file)
+ap inline_stylesheets
 
     @input_markup_raw         = File.read markup_file
     @shl_input_markup_raw     = Compiler.syntax_highlight @input_markup_raw, Compiler.get_ext(markup_file)
