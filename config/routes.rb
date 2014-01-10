@@ -4,7 +4,6 @@ XdMailCompiler::Application.routes.draw do
 
   resources :campaigns do
     collection do
-       # get :refresh # upload new file
        get :collect_resources # for campaign
       post :select_resource   # ajax load in
     end
@@ -13,7 +12,7 @@ XdMailCompiler::Application.routes.draw do
     end
   end
 
-  resources :resources, :uploads
+  resources :resources
 
   resources :exports do
     collection do

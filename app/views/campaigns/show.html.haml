@@ -2,48 +2,49 @@
 =# form_tag '/uploads', multipart: true, id: :dropzone, class: :row do
 
 -content_for :javascripts do
-  =javascript_include_tag 'js/jquery.fileupload',           |
-                          'campaign_show'
-  
-=form_tag select_resource_campaigns_path, id: :dropzone, remote: true do
-  .col-sm-12
-    .row
-      .col-sm-6
-        %h5
-          %strong Upload files by dragging them onto the window
-          = file_field_tag :upload
-      .col-sm-4
-        .progress.progress-success.progress-striped.active
-          .bar{style: "width:10%;"}
-        / The loading indicator is shown during image processing
-        .fileupload-loading
-      = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-2 btn btn-xs btn-default'} do
-        Export resources for
-        %br
-        =image_tag 'eoa-favicon.png'
-        Email on Acid
-    .row
-      .col-sm-4
-        %h4
-          %i.fa.fa-picture-o
-          Image Resources
-        %table#image-resources.resources.table.table-striped.table-condensed
-          -@campaign.resources.images.each do |image|
-            =render "image_resource_row", locals: {image: image}
-      .col-sm-4
-        %h4
-          %i.fa.fa-code
-          Markup Resources
-        %table.resources#markup-resources.table.table-striped.table-condensed
-          -@campaign.resources.markups.each do |resource|
-            =render "code_resource_row", locals: {resource: resource, resource_type: :markup}
-      .col-sm-4
-        %h4
-          %i.fa.fa-leaf
-          Style Resources
-        %table.resources#style-resources.table.table-striped.table-condensed
-          -@campaign.resources.stylesheets.each do |resource|
-            =render "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
+  =#javascript_include_tag 'js/jquery.fileupload'
+  =javascript_include_tag 'campaign_show'
+
+#dropzone.row
+  =form_tag resources_path, id: "dropzone-form", multipart: true, class: 'col-sm-6', remote: true do
+    %h5
+      %strong Upload files by dragging them onto this dotted area
+      = file_field_tag :upload#, id: "upload-field"
+      =# submit_tag "Upload"
+  .col-sm-4
+    .progress.progress-success.progress-striped.active
+      .bar{style: "width:10%;"}
+    / The loading indicator is shown during image processing
+    .fileupload-loading
+  = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-2 btn btn-xs btn-default'} do
+    Export resources for
+    %br
+    =image_tag 'eoa-favicon.png'
+    Email on Acid
+
+
+=form_tag select_resource_campaigns_path, remote: true do
+  .col-sm-4
+    %h4
+      %i.fa.fa-picture-o
+      Image Resources
+    %table#image-resources.resources.table.table-striped.table-condensed
+      -@campaign.resources.images.each do |image|
+        =render "image_resource_row", locals: {image: image}
+  .col-sm-4
+    %h4
+      %i.fa.fa-code
+      Markup Resources
+    %table.resources#markup-resources.table.table-striped.table-condensed
+      -@campaign.resources.markups.each do |resource|
+        =render "code_resource_row", locals: {resource: resource, resource_type: :markup}
+  .col-sm-4
+    %h4
+      %i.fa.fa-leaf
+      Style Resources
+    %table.resources#style-resources.table.table-striped.table-condensed
+      -@campaign.resources.stylesheets.each do |resource|
+        =render "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
 .row
   .col-sm-12
     %h3 Output

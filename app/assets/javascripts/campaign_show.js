@@ -1,27 +1,44 @@
 var img;
+var formData;
 
 $(function () {
   // file upload drag and drop
-  $('#dropzone').fileupload({
-    dropZone: $(this),
-    url: '/uploads',
-    dataType: 'json',
-    autoUpload: true,
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-    maxFileSize: 5000000, // 5 MB
-    // Enable image resizing, except for Android and Opera,
-    // which actually support image resizing, but fail to
-    // send Blob objects via XHR requests:
-    disableImageResize: /Android(?!.*Chrome)|Opera/
-        .test(window.navigator.userAgent),
-    previewMaxWidth: 100,
-    previewMaxHeight: 100,
-    previewCrop: true
-  });
 
-  $(document).bind('drop dragover', function (e) {
+
+  $(document).bind('dragover', function (e) {
     e.preventDefault();
   });
+
+  $('#dropzone').hover(
+    function(){ $(this).data('hover',1); },
+    function(){ $(this).data('hover',0); }
+  )
+
+
+  $(document).bind('drop', function(event) {
+
+    event.preventDefault();
+
+    var file = event.originalEvent.dataTransfer.files[0];
+    
+
+    if($("#dropzone").data('hover') == 1) {
+      var form = $('#dropzone-form');
+      var formData = new FormData(form);
+      formData.append('upload', file);
+
+      // console.log(formData);
+
+      // $.post('/resources', {
+      //   upload: formData
+      // })
+      // $('#dropzone-form').submit();
+    } else {
+      alert('did not drop on dropzone');
+    }
+  })
+
+
 
   // image resource preview
   $('#image-resources li').popover({
@@ -42,11 +59,5 @@ $(function () {
   $('.resources input[type=radio]').click(function(){
     $(this).closest('form').submit();
   })
-
-  // retrieve screenshot for a link
-  // $('#compiled-browser-preview').on('click', 'a', function(e){
-  //   alert('klik');
-  //   e.preventDefault();
-  // });
 
 });

@@ -45,7 +45,8 @@ gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
 gem 'coderay'   # syntax colorer
 gem 'paperclip' # file uploader
 gem 'rubyzip'   # zip library
-gem 'selenium-webdriver' # web crawler for screenshots
+# gem 'selenium-webdriver' # web crawler for screenshots
+gem 'remotipart' # web crawler for screenshots
 
 
 # other junk that may be useful later
