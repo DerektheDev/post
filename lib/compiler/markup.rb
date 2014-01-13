@@ -77,8 +77,12 @@ module Compiler
     end
 
     def self.nodes_found_for branch, selector
-      found_nodes = branch.css(selector.to_s).to_a
-      found_nodes.uniq{|elem| elem.path}
+      if found_nodes = branch.css(selector.to_s).to_a
+        o = found_nodes.uniq{|elem| elem.path}
+      else
+        o = nil
+      end
+      o
     end
 
     def self.nodes_found_for? branch, selector

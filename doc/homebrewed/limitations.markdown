@@ -16,3 +16,7 @@ File naming conventions
 - for styles that apply to a whole campaign, title it global.css
 - for resets, use reset.css. These will go in the body, but will always load first, before global.css
 - for head styles (for example, media queries), title it california_head.css or global_head.css
+
+CSS
+------
+- No pseudoselectors or shadow DOM elements (e.g. element:before, element:after)
