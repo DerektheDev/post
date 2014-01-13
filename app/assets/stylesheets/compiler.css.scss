@@ -20,6 +20,10 @@
   // border: 3px dashed #aca;
   border: 3px dashed #aca;
 
+  div, form#dropzone-form, a{
+    pointer-events: none;
+  }
+
   input#upload{
     position: absolute;
     cursor: pointer;

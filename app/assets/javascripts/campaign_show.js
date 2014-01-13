@@ -1,41 +1,43 @@
 var img;
-var formData;
 
 $(function () {
   // file upload drag and drop
+  $('#dropzone').bind({
+    mouseenter: function (event){
+      // $(this).data('hover',1);
+    },
+    mouseleave: function (event){
+      // $(this).data('hover',0);
+      $(this).removeClass('alert-success', 250);
+    },
+    dragenter: function (event){
+      $(this).addClass('alert-success', 250);
+    },
+    dragleave: function (event){
+      $(this).removeClass('alert-success', 250);
+    },
+    drop: function (event){
+      $(this).removeClass('alert-success', 250);
 
 
-  $(document).bind('dragover', function (e) {
-    e.preventDefault();
-  });
+      var file = event.originalEvent.dataTransfer.files[0];
 
-  $('#dropzone').hover(
-    function(){ $(this).data('hover',1); },
-    function(){ $(this).data('hover',0); }
-  )
-
-
-  $(document).bind('drop', function(event) {
-
-    event.preventDefault();
-
-    var file = event.originalEvent.dataTransfer.files[0];
-    
-
-    if($("#dropzone").data('hover') == 1) {
       var form = $('#dropzone-form');
       var formData = new FormData(form);
       formData.append('upload', file);
-
-      // console.log(formData);
 
       // $.post('/resources', {
       //   upload: formData
       // })
       // $('#dropzone-form').submit();
-    } else {
-      alert('did not drop on dropzone');
+
     }
+  });
+
+  // Prevent DnD to any other part of the window
+  // from taking any action
+  $(document).bind('drop dragover', function(event) {
+    event.preventDefault();
   })
 
 

@@ -24,27 +24,28 @@
 
 
 =form_tag select_resource_campaigns_path, remote: true do
-  .col-sm-4
-    %h4
-      %i.fa.fa-picture-o
-      Image Resources
-    %table#image-resources.resources.table.table-striped.table-condensed
-      -@campaign.resources.images.each do |image|
-        =render "image_resource_row", locals: {image: image}
-  .col-sm-4
-    %h4
-      %i.fa.fa-code
-      Markup Resources
-    %table.resources#markup-resources.table.table-striped.table-condensed
-      -@campaign.resources.markups.each do |resource|
-        =render "code_resource_row", locals: {resource: resource, resource_type: :markup}
-  .col-sm-4
-    %h4
-      %i.fa.fa-leaf
-      Style Resources
-    %table.resources#style-resources.table.table-striped.table-condensed
-      -@campaign.resources.stylesheets.each do |resource|
-        =render "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
+  .row
+    .col-sm-4
+      %h4
+        %i.fa.fa-picture-o
+        Image Resources
+      %table#image-resources.resources.table.table-striped.table-condensed
+        -@campaign.resources.images.each do |image|
+          =render "image_resource_row", locals: {image: image}
+    .col-sm-4
+      %h4
+        %i.fa.fa-code
+        Markup Resources
+      %table.resources#markup-resources.table.table-striped.table-condensed
+        -@campaign.resources.markups.each do |resource|
+          =render "code_resource_row", locals: {resource: resource, resource_type: :markup}
+    .col-sm-4
+      %h4
+        %i.fa.fa-leaf
+        Style Resources
+      %table.resources#style-resources.table.table-striped.table-condensed
+        -@campaign.resources.stylesheets.each do |resource|
+          =render "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
 .row
   .col-sm-12
     %h3 Output
