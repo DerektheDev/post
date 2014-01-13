@@ -8,30 +8,15 @@
 
 =form_tag select_resource_campaigns_path, remote: true do
   .row
-    .col-sm-4#image-resources.resources
-      %h4
-        %i.fa.fa-picture-o
-        Image Resources
-      %table.table.table-striped.table-condensed
-        %tbody
-          -@campaign.resources.images.each do |resource|
-            =render partial: "image_resource_row", locals: {resource: resource}
-    .col-sm-4#markup-resources.resources
-      %h4
-        %i.fa.fa-code
-        Markup Resources
-      %table.table.table-striped.table-condensed
-        %tbody
-          -@campaign.resources.markups.each do |resource|
-            =render partial: "code_resource_row", locals: {resource: resource, resource_type: :markup}
-    .col-sm-4#stylesheet-resources.resources
-      %h4
-        %i.fa.fa-leaf
-        Style Resources
-      %table.table.table-striped.table-condensed
-        %tbody
-          -@campaign.resources.stylesheets.each do |resource|
-            =render partial: "code_resource_row", locals: {resource: resource, resource_type: :stylesheet}
+    -{image: 'picture-o', markup: 'code', stylesheet: 'leaf'}.each do |resource_type, icon|
+      .col-sm-4.resources{id: "#{resource_type}_resources"}
+        %h4
+          %i{class: "fa fa-#{icon}"}
+          #{resource_type.to_s.capitalize} Resources
+        %table.table.table-striped.table-condensed
+          %tbody
+            -@campaign.resources.send((resource_type.to_s.pluralize)).each do |resource|
+              =render partial: "resource_row", locals: {resource: resource, resource_type: resource_type}
 .row
   %h3.col-sm-9 Output
   = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-3 btn btn-xs btn-default'} do

@@ -1,0 +1,14 @@
+%tr
+  %td
+    - if resource_type == :markup
+      = radio_button_tag "selected_#{resource_type}", resource.id
+    - if resource_type == :image
+      =link_to resource.image.url, {class: :fancybox, data: {thumb: resource.image.url(:thumb)}} do
+        =strip_query(File.basename resource.image.url)
+    - else
+      = link_to resource_path(resource.id), {class: 'fancybox-ajax'} do
+        = strip_query(File.basename resource.file.url)
+
+  %td
+    =link_to resource_path(resource.id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, data:{confirm: "Are you certain you want to remove this resource from this campaign? You cannot undo this."}} do
+      %i.fa.fa-trash-o
