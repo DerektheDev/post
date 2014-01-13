@@ -19,18 +19,17 @@ $(function () {
     drop: function (event){
       $(this).removeClass('alert-success', 250);
 
-
       var file = event.originalEvent.dataTransfer.files[0];
-
-      var form = $('#dropzone-form');
-      var formData = new FormData(form);
+      var formData = new FormData();
       formData.append('upload', file);
 
-      // $.post('/resources', {
-      //   upload: formData
-      // })
-      // $('#dropzone-form').submit();
-
+      $.ajax({
+        type: 'POST',
+        url: '/resources',
+        processData: false,
+        contentType: false,
+        data: formData
+      })
     }
   });
 
