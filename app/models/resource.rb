@@ -21,12 +21,12 @@ class Resource < ActiveRecord::Base
   end
 
   def self.get_resource_type extension
-    case extension
-    when self.permitted_markup_filetypes
+    extension = extension.to_sym
+    if self.permitted_markup_filetypes.include? extension
       :markup
-    when self.permitted_stylesheet_filetypes
+    elsif self.permitted_stylesheet_filetypes.include? extension
       :stylesheet
-    when self.permitted_image_filetypes
+    elsif self.permitted_image_filetypes.include? extension
       :image
     else
       :nonpermitted

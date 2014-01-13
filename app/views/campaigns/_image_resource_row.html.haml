@@ -1,7 +1,7 @@
 %tr
   %td
-    =link_to locals[:image].image.url, {class: :fancybox, data: {thumb: locals[:image].image.url(:thumb)}} do
-      =strip_query(File.basename locals[:image].image.url)
+    =link_to resource.image.url, {class: :fancybox, data: {thumb: resource.image.url(:thumb)}} do
+      =strip_query(File.basename resource.image.url)
   %td
-    =link_to resource_path(locals[:image].id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, data:{confirm: "Are you certain you want to remove this resource from this campaign? You cannot undo this."}} do
+    =link_to resource_path(resource.id), {class: 'btn btn-xs btn-default danger-hover', method: :delete, data:{confirm: "Are you certain you want to remove this resource from this campaign? You cannot undo this."}} do
       %i.fa.fa-trash-o

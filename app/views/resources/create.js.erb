@@ -1,3 +1,10 @@
 $(function(){
-  alert('yeah!');
+  <%
+    rt = Resource.get_resource_type(@resource.extension)
+    
+    partial = rt == :image ? "image" : "code"
+
+    content = render(partial:"campaigns/#{partial}_resource_row", locals: { resource: @resource, resource_type: rt.to_sym })
+  %>
+  $("#<%= rt %>-resources tbody").append("<%= escape_javascript content %>");
 })

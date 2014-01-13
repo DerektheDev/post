@@ -18,10 +18,10 @@
     = yield :stylesheets
     = csrf_meta_tags
   %body
-    .container
-      %nav.navbar.navbar-inverse.navbar-default{role: :navigation}
+    %header.navbar.navbar-inverse.navbar-default{role: :navigation}
+      .container      
         .navbar-header
           =link_to '/', class: 'navbar-brand' do
             =image_tag 'xd-logo-bw.png', height: '30'
-      =flash[:alert]
-      = yield
+    = flash[:alert]
+    .container= yield

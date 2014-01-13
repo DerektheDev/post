@@ -11,8 +11,6 @@
  
 }
 
-
-
 #dropzone{
   padding: .5em;
   border-radius: 1em;
@@ -34,4 +32,9 @@
     max-height: 12em;
     overflow-y: scroll;
   }
+}
+
+.resources{
+  height: 12em;
+  overflow-y:auto;
 }
