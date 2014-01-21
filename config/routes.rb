@@ -14,11 +14,7 @@ XdMailCompiler::Application.routes.draw do
     end
   end
 
-  resources :resources do
-    collection do
-      # get :calculate_upload_progress
-    end
-  end
+  resources :resources
 
   resources :exports do
     collection do

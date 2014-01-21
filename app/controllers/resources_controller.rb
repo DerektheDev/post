@@ -17,9 +17,9 @@ class ResourcesController < ApplicationController
 
   def create
     respond_to do |format|
-      ap params
-      ap params[:upload]
-      ap params[:upload].inspect
+      # ap params
+      # ap params[:upload]
+      # ap params[:upload].inspect
       file = params[:upload]
       extension = Compiler.get_ext(file.original_filename)
       campaign  = Campaign.find(session[:campaign_id])

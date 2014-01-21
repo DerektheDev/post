@@ -1,3 +1,11 @@
+function fillProgressBar(progressBar, percentage, speed, message, classes){
+  $(progressBar).html(message);
+  $(progressBar).attr('class', 'progress-bar '+ classes);
+  progressBar.animate({
+    width: percentage+"%"
+  }, speed);
+}
+
 var img;
 
 $(function () {
@@ -21,50 +29,49 @@ $(function () {
 
       var formData = new FormData();
       var file = event.originalEvent.dataTransfer.files[0];
-      // var uuid = Math.floor(Math.random() * 10000000000);
+      var uuid = Math.floor(Math.random() * 10000000000);
+      progressBar = $('#progress-target').find('.progress-bar');
+
 
       formData.append('upload', file);
-      // formData.append('uploadSize', file.size);
-      // formData.append('X-Progress-ID', uuid);
 
 
-      $('#progress-target').show();
-
-      // get progress
-      // setInterval( function(){
-      //   $.get('/progress', {
-      //     'X-Progress-ID': uuid
-      //   })
-      //   .done(function(data) {
-      //     var upload = $.parseJSON(data);
-      //     console.log(upload);
-      //   }).fail(function() {
-      //     console.log("oops...");
-      //   })
-      // }, 250);
-
+      fillProgressBar(progressBar, 0, 0, '');
+      $('#progress-target').fadeIn('fast');
 
       // post data
       $.ajax({
         type: 'POST',
-        url: "/resources?X-Progress-ID="+uuid,
+        url: '/resources',
         processData: false,
         contentType: false,
         data: formData,
-        xhrFields: {
-          // add listener to XMLHTTPRequest object directly for progress (jquery doesn't have this yet)
-          onprogress: function (progress) {
-            // calculate upload progress
-            var percentage = Math.floor((progress.total / progress.totalSize) * 100);
-            // log upload progress to console
-            console.log('progress', percentage);
-            if (percentage === 100) {
-              console.log('DONE!');
-            } else {
-              console.log('Not done yet.')
-            }
+        xhr: function(){
+          // get the native XmlHttpRequest object
+          var xhr = $.ajaxSettings.xhr();
+          // set the onprogress event handler
+          xhr.upload.onprogress = function(evt){
+            percentage = ((evt.loaded/evt.total)*100);
+            message = "Uploading...";
+            fillProgressBar(progressBar, percentage, 'fast', message);
           }
+          // set the onload event handler
+          xhr.upload.onload = function(){
+            message = "Processing upload...";
+            fillProgressBar(progressBar, percentage, 'fast', 'Processing upload...');
+          }
+          // return the customized object
+          return xhr;
         }
+      }).done(function(data){
+        // uploading and processing are done
+        fillProgressBar(progressBar, 100, 'fast', 'Success!', 'progress-bar-success');
+      }).fail(function(data){
+        fillProgressBar(progressBar, 100, 'fast', 'Something went wrong...', 'progress-bar-danger');
+      }).always(function(data){
+        setTimeout(function(){
+          $('#progress-target').fadeOut('slow');
+        }, 1500);
       })
 
     }
