@@ -47,6 +47,7 @@ gem 'paperclip' # file uploader
 gem 'rubyzip'   # zip library
 # gem 'selenium-webdriver' # web crawler for screenshots
 gem 'remotipart' # web crawler for screenshots
+gem 'passenger' # application server
 
 
 # other junk that may be useful later

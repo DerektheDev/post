@@ -17,6 +17,9 @@ class ResourcesController < ApplicationController
 
   def create
     respond_to do |format|
+      ap params
+      ap params[:upload]
+      ap params[:upload].inspect
       file = params[:upload]
       extension = Compiler.get_ext(file.original_filename)
       campaign  = Campaign.find(session[:campaign_id])
@@ -39,6 +42,17 @@ class ResourcesController < ApplicationController
       end
       format.js
     end
+  end
+
+  def calculate_upload_progress
+    # numerator   = 
+    # denominator = params[:upload_size]
+    # percentage  = (numerator/denominator)
+    # render nothing: true
+    # respond_to do |format|
+    #   format.json
+    # end
+    render nothing: true
   end
 
 private

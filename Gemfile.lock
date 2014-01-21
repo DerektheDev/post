@@ -60,6 +60,7 @@ GEM
     columnize (0.3.6)
     commonjs (0.2.7)
     csspool (3.0.2)
+    daemon_controller (1.1.8)
     daemons (1.1.9)
     debug_inspector (0.0.2)
     debugger (1.6.3)
@@ -98,6 +99,10 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    passenger (4.0.34)
+      daemon_controller (>= 1.1.0)
+      rack
+      rake (>= 0.8.1)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -178,6 +183,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   paperclip
+  passenger
   rails (= 4.0.1)
   remotipart
   rubyzip

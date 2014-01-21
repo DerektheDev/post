@@ -2,6 +2,8 @@ XdMailCompiler::Application.routes.draw do
 
   root 'campaigns#index'
 
+  # get '/progress', to: 'resources#calculate_upload_progress'
+
   resources :campaigns do
     collection do
        get :collect_resources # for campaign
@@ -12,7 +14,11 @@ XdMailCompiler::Application.routes.draw do
     end
   end
 
-  resources :resources
+  resources :resources do
+    collection do
+      # get :calculate_upload_progress
+    end
+  end
 
   resources :exports do
     collection do

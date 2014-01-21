@@ -19,17 +19,54 @@ $(function () {
     drop: function (event){
       $(this).removeClass('alert-success', 250);
 
-      var file = event.originalEvent.dataTransfer.files[0];
       var formData = new FormData();
-      formData.append('upload', file);
+      var file = event.originalEvent.dataTransfer.files[0];
+      // var uuid = Math.floor(Math.random() * 10000000000);
 
+      formData.append('upload', file);
+      // formData.append('uploadSize', file.size);
+      // formData.append('X-Progress-ID', uuid);
+
+
+      $('#progress-target').show();
+
+      // get progress
+      // setInterval( function(){
+      //   $.get('/progress', {
+      //     'X-Progress-ID': uuid
+      //   })
+      //   .done(function(data) {
+      //     var upload = $.parseJSON(data);
+      //     console.log(upload);
+      //   }).fail(function() {
+      //     console.log("oops...");
+      //   })
+      // }, 250);
+
+
+      // post data
       $.ajax({
         type: 'POST',
-        url: '/resources',
+        url: "/resources?X-Progress-ID="+uuid,
         processData: false,
         contentType: false,
-        data: formData
+        data: formData,
+        xhrFields: {
+          // add listener to XMLHTTPRequest object directly for progress (jquery doesn't have this yet)
+          onprogress: function (progress) {
+            // calculate upload progress
+            var percentage = Math.floor((progress.total / progress.totalSize) * 100);
+            // log upload progress to console
+            console.log('progress', percentage);
+            if (percentage === 100) {
+              console.log('DONE!');
+            } else {
+              console.log('Not done yet.')
+            }
+          }
+        }
       })
+
     }
   });
 
