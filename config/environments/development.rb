@@ -33,8 +33,11 @@ XdMailCompiler::Application.configure do
   # paperclip development
   Paperclip.options[:command_path] = "/usr/local/bin/"
 
-  require 'new_relic/rack/developer_mode'
-  config.middleware.use NewRelic::Rack::DeveloperMode
-  ENV['NEWRELIC_ENABLE'] = 'true'
+  # new relic
+  if defined? NewRelic
+    require 'new_relic/rack/developer_mode'
+    config.middleware.use NewRelic::Rack::DeveloperMode
+    ENV['NEWRELIC_ENABLE'] = 'true'
+  end
 
 end

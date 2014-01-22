@@ -64,8 +64,8 @@ group :development do
   gem 'thin'
   # gem 'pry'
   # gem 'debugger'
-  gem 'newrelic_rpm'
-  # gem 'rack-mini-profiler'
+  # gem 'newrelic_rpm'
+  gem 'rack-mini-profiler'
   # gem 'fiveruns_tuneup'
   # gem 'coverband'
 end

@@ -17,27 +17,27 @@ module Compiler
 
       tree = self.build_tree markup_file
       
-      @tree_root = tree.root.children.first # skips straight to inside body tag
-      # @tree_root = tree.root
+      # @tree_root = tree.root.children.first # skips straight to inside body tag
+      @tree_root = tree.root
 
       # apply the styles for each stylesheet, in the
       # order in which they are passed
       stylesheet_files.each do |ss|
-        self.apply_styles @tree_root, @tree_root, ss
+        css_tree = Compiler::Styles.build_tree ss
+        self.apply_styles @tree_root, @tree_root, css_tree
       end
 
       output_markup = @tree_root
     end
 
 
-    def self.apply_styles tree, branch, styles_file
+    def self.apply_styles tree, branch, css_tree
 
       branch.children.each do |node|
         if node.class == Nokogiri::XML::Element
           matching_rule_sets = []
           matching_nodes = []
 
-          css_tree = Compiler::Styles.build_tree(styles_file)
           css_tree.rule_sets.each do |rule_set|
             rule_set.selectors.each do |selector|
               # find nodes that match the selector
@@ -70,7 +70,7 @@ module Compiler
 
           # move down the Nokogiri DOM tree
           unless node.children.empty?
-            apply_styles tree, node, styles_file
+            apply_styles tree, node, css_tree
           end
         end
       end
