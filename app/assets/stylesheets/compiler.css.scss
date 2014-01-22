@@ -35,8 +35,10 @@
 }
 
 .resources{
-  height: 12em;
-  overflow-y:auto;
+  .table-wrapper{
+    height: 10em;
+    overflow-y:auto;
+  }
 }
 
 #progress-target{

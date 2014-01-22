@@ -15,10 +15,11 @@
         %h4
           %i{class: "fa fa-#{icon}"}
           #{resource_type.to_s.capitalize} Resources
-        %table.table.table-striped.table-condensed
-          %tbody
-            -@campaign.resources.send((resource_type.to_s.pluralize)).each do |resource|
-              =render partial: "resource_row", locals: {resource: resource, resource_type: resource_type}
+        .table-wrapper
+          %table.table.table-striped.table-condensed
+            %tbody
+              -@campaign.resources.send((resource_type.to_s.pluralize)).each do |resource|
+                =render partial: "resource_row", locals: {resource: resource, resource_type: resource_type}
 .row
   %h3.col-sm-9 Output
   = link_to preflight_for_email_on_acid_exports_path, {class: 'col-sm-3 btn btn-xs btn-default'} do
