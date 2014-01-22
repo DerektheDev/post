@@ -25,10 +25,7 @@ gem 'jbuilder', '~> 1.2'
 # My Toolkit =)
 gem 'awesome_print'
 gem 'haml'
-gem 'thin'
 gem 'bourbon'
-gem 'debugger'
-# gem 'pry'
 
 #
 # PARSING GEMS
@@ -45,14 +42,15 @@ gem 'less', git: 'https://github.com/cowboyd/less.rb.git', submodules: true
 gem 'coderay'   # syntax colorer
 gem 'paperclip' # file uploader
 gem 'rubyzip'   # zip library
-# gem 'selenium-webdriver' # web crawler for screenshots
-gem 'remotipart' # web crawler for screenshots
-gem 'passenger' # application server
 
 
 # other junk that may be useful later
 # crass, [racc, rexical, (for csspool)],
 # hpricot, tamtam, premailer
+# selenium-webdriver # web crawler for screenshots
+# remotipart # web crawler for screenshots
+# passenger # application server
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -62,6 +60,13 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'bullet'
+  gem 'thin'
+  # gem 'pry'
+  # gem 'debugger'
+  # gem 'newrelic_rpm'
+  # gem 'rack-mini-profiler'
+  # gem 'fiveruns_tuneup'
 end
 
 # Use ActiveModel has_secure_password

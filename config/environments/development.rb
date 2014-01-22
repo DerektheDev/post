@@ -27,6 +27,7 @@ XdMailCompiler::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 
+  # better errors
   BetterErrors.editor = :sublime
 
   # paperclip development

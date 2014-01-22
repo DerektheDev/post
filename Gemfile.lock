@@ -45,6 +45,9 @@ GEM
       sass (>= 3.2.0)
       thor
     builder (3.1.4)
+    bullet (4.7.1)
+      activesupport
+      uniform_notifier (>= 1.4.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.3)
@@ -57,18 +60,10 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
-    columnize (0.3.6)
     commonjs (0.2.7)
     csspool (3.0.2)
-    daemon_controller (1.1.8)
     daemons (1.1.9)
     debug_inspector (0.0.2)
-    debugger (1.6.3)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.4)
-    debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.2.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.0.2)
@@ -99,10 +94,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    passenger (4.0.34)
-      daemon_controller (>= 1.1.0)
-      rack
-      rake (>= 0.8.1)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -124,7 +115,6 @@ GEM
     rdoc (3.12.2)
       json (~> 1.4)
     ref (1.0.5)
-    remotipart (1.2.1)
     rubyzip (1.1.0)
     sass (3.2.12)
     sass-rails (4.0.1)
@@ -163,6 +153,7 @@ GEM
     uglifier (2.3.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    uniform_notifier (1.4.0)
 
 PLATFORMS
   ruby
@@ -172,10 +163,10 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bourbon
+  bullet
   coderay
   coffee-rails (~> 4.0.0)
   csspool
-  debugger
   haml
   jbuilder (~> 1.2)
   jquery-rails
@@ -183,9 +174,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   paperclip
-  passenger
   rails (= 4.0.1)
-  remotipart
   rubyzip
   sass
   sass-rails (~> 4.0.0)
