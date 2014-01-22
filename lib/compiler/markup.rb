@@ -36,7 +36,6 @@ module Compiler
       branch.children.each do |node|
         if node.class == Nokogiri::XML::Element
           matching_rule_sets = []
-          matching_nodes = []
 
           css_tree.rule_sets.each do |rule_set|
             rule_set.selectors.each do |selector|
@@ -47,25 +46,35 @@ module Compiler
               matching_nodes = found_nodes.select{|fn| fn.path == node.path}
 
               if matching_nodes.present?
-                unless matching_rule_sets.include? rule_set
-                  matching_rule_sets.push({
-                    rule_set: rule_set,
-                    specificity: selector.specificity.zip([100, 10, 1]).map{|x,y| x*y}.inject(:+)
-                  })
-                end
+                matching_rule_sets.push({
+                  rule_set: rule_set,
+                  specificity: selector.specificity.zip([100, 10, 1]).map{|x,y| x*y}.inject(:+)
+                })
               end
             end
           end
 
           # if there are any rule_sets that apply to this node, inline 'em
-          
           if matching_rule_sets.present?
-            styles_for_rs = matching_rule_sets.uniq{|rs| rs}.sort_by{|rs| rs[:specificity]}.map{|rs| rs[:rule_set].declarations}
-          end
+            new_styles = matching_rule_sets.sort_by{ |rs|
+              rs[:specificity]
+            }.map{|rs|
+              rs[:rule_set].declarations.map{ |dec|
+                dec.to_css
+              }
+            }.flatten.join('').strip
 
-          # apply the styles
-          if matched_node = @tree_root.xpath(node.path)
-            matched_node.attribute(:style, styles_for_rs.join('').strip) if styles_for_rs
+            # apply the styles
+            if matched_node = @tree_root.xpath(node.path).first
+
+              matched_node[:style] = if matched_node.has_attribute? 'style'
+                # if the document already contains a style string,
+                # don't throw it away!
+                [matched_node[:style], new_styles].join('')
+              else
+                new_styles
+              end
+            end
           end
 
           # move down the Nokogiri DOM tree
