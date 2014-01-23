@@ -50,18 +50,32 @@ private
     get_markups
     @selected_markup = @markup_docs.find(session[:sel_mu_id])
 
-    get_compiled_html File.new(@selected_markup.file.path)
+    get_compiled_html @selected_markup
   end
 
-  def get_compiled_html markup_file
-    # head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
-    #   File.new("public#{strip_query pca.file.url}") # pca = paperclip attachment
-    # end
-    inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map do |pca|
-      File.new("public#{strip_query pca.file.url}")
-    end
+  def get_compiled_html markup
+    markup_file = File.new(markup.file.path)
+    if markup.cache_valid?
+      rendered_html = Nokogiri::HTML(markup.cached_compilation)
+    else
+      # head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
+      #   File.new("public#{strip_query pca.file.url}") # pca = paperclip attachment
+      # end
+      inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map do |pca|
+        File.new("public#{strip_query pca.file.url}")
+      end
+      rendered_html = Compiler::Markup.render(markup_file, inline_stylesheets)
+      markup.cached_compilation = rendered_html.to_html
 
-    rendered_html             = Compiler::Markup.render markup_file, inline_stylesheets
+ap rendered_html
+ap rendered_html.class
+ap rendered_html.to_html
+ap rendered_html.to_html.class
+
+
+      markup.cache_valid = true
+      markup.save
+    end
     @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
     @shl_rendered_html        = Compiler.syntax_highlight rendered_html, :html
   end

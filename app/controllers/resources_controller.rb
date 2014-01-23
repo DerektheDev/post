@@ -9,7 +9,14 @@ class ResourcesController < ApplicationController
 
   def destroy
     resource = Resource.find params[:id]
+    extension = Compiler.get_ext(resource.file_file_name)
+    
     resource.image, resource.file = nil, nil
+
+    # we may be removing a stylesheet... if so, reset the cache
+    if Resource.permitted_stylesheet_filetypes.include? extension
+      resource.campaign.reset_cache
+    end
     resource.save
     resource.destroy
     redirect_to campaign_path(session[:campaign_id])
@@ -44,17 +51,6 @@ class ResourcesController < ApplicationController
     end
   end
 
-  def calculate_upload_progress
-    # numerator   = 
-    # denominator = params[:upload_size]
-    # percentage  = (numerator/denominator)
-    # render nothing: true
-    # respond_to do |format|
-    #   format.json
-    # end
-    render nothing: true
-  end
-
 private
 
   def sort_and_create_files_for extension, campaign
@@ -63,7 +59,7 @@ private
 
     if Resource.permitted_filetypes.include? extension
       @resource = Resource.create({
-        campaign_id: session[:campaign_id],
+           campaign: campaign,
           extension: extension
       })
       if Resource.permitted_image_filetypes.include? extension
@@ -71,7 +67,12 @@ private
       else
         @resource.file = params[:upload]
       end
-      @resource.save
+      if @resource.save
+        if Resource.permitted_stylesheet_filetypes.include? extension
+          # this is a new stylesheet... time to rebuild the markup!
+          campaign.reset_cache
+        end
+      end
     else
       flash[:alert] = "Sorry, #{extension} is not a valid filetype"
     end

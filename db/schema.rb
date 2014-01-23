@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131227212705) do
+ActiveRecord::Schema.define(version: 20140123214228) do
 
   create_table "campaigns", force: true do |t|
     t.string   "name"
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 20131227212705) do
     t.datetime "image_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "cached_compilation", limit: 16777215
+    t.boolean  "cache_valid",                         default: false
   end
 
 end
