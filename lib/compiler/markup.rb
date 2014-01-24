@@ -13,7 +13,7 @@ module Compiler
       tree
     end
 
-    def self.render markup_file, stylesheet_files
+    def self.render markup_file, inline_stylesheets, *head_stylesheets
 
       tree = self.build_tree markup_file
       
@@ -22,14 +22,13 @@ module Compiler
 
       # apply the styles for each stylesheet, in the
       # order in which they are passed
-      stylesheet_files.each do |ss|
+      inline_stylesheets.each do |ss|
         css_tree = Compiler::Styles.build_tree ss
         self.apply_styles @tree_root, @tree_root, css_tree
       end
 
       output_markup = @tree_root
     end
-
 
     def self.apply_styles tree, branch, css_tree
 
