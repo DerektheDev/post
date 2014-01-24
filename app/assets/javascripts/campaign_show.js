@@ -9,6 +9,11 @@ function fillProgressBar(progressBar, percentage, speed, message, classes){
 var img;
 
 $(function () {
+
+  var progressTarget = $('#progress-target')
+  var progressBar = $('#progress-target').find('.progress-bar');
+
+
   // file upload drag and drop
   $('#dropzone').bind({
     mouseenter: function (event){
@@ -29,15 +34,11 @@ $(function () {
 
       var formData = new FormData();
       var file = event.originalEvent.dataTransfer.files[0];
-      var uuid = Math.floor(Math.random() * 10000000000);
-      progressBar = $('#progress-target').find('.progress-bar');
-
 
       formData.append('upload', file);
 
-
       fillProgressBar(progressBar, 0, 0, '');
-      $('#progress-target').fadeIn('fast');
+      progressTarget.fadeIn('fast');
 
       // post data
       $.ajax({
@@ -70,7 +71,7 @@ $(function () {
         fillProgressBar(progressBar, 100, 'fast', 'Something went wrong...', 'progress-bar-danger');
       }).always(function(data){
         setTimeout(function(){
-          $('#progress-target').fadeOut('slow');
+          progressTarget.fadeOut('slow');
         }, 1500);
       })
 
@@ -102,7 +103,25 @@ $(function () {
 
   // load selected resource in view
   $('.resources input[type=radio]').click(function(){
+    // progressBar.html('Compiling markup. Please wait...');
+    // progressBar.css('width', '100%');
+    // progressTarget.fadeIn('fast');
+
     $(this).closest('form').submit();
+    
+    // form = $(this).closest('form');
+    // action = form.attr('action');
+    // $.post(action, {
+    //   data: $(form).serialize()
+    // }).done(function(data){
+    //   fillProgressBar(progressBar, 100, 'fast', 'Compilation successful!', 'progress-bar-success');
+    // }).fail(function(data){
+    //   fillProgressBar(progressBar, 100, 'fast', 'Compilation failed...', 'progress-bar-danger');
+    // }).always(function(data){
+    //   setTimeout(function(){
+    //     progressTarget.fadeOut('slow');
+    //   }, 1500);
+    // })
   })
 
 });
