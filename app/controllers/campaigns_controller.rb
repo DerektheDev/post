@@ -67,47 +67,38 @@ private
       rendered_html = Compiler::Markup.render(markup_file, inline_stylesheets, head_stylesheets)
 
 
-      "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-      <!--<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">-->
-      <!--<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd\">-->
-      <html xmlns=\"http://www.w3.org/1999/xhtml\">
-      <head>
-        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
-        <meta name=\"viewport\" content=\"user-scalable=no, width=device-width\" />
-        <title>Automobile Club of Southern California</title>
-        <style type=\"text/css\">"
+      rendered_html[:xmlns] = "http://www.w3.org/1999/xhtml"
 
-pp rendered_html
-# ap rendered_html.css('head')
+      prepended_head = Nokogiri::XML::Element.new 'head', rendered_html
+      
+      head_hash = {
+        meta:  {
+          name: 'viewport',
+          content: 'user-scalable=no, width=device-width'
+        },
+        title: { tag_content: @campaign.name },
+        style: {
+          type: 'text/css',
+          tag_content: "\n\n"
+        }
+      }
 
-ap '-----------'
-html_tag = rendered_html.at_css('html')
-  # html_tag['xmlns'] = "http://www.w3.org/1999/xhtml"
+      head_hash.each do |tag, attributes|
+        node = Nokogiri::XML::Element.new tag.to_s, rendered_html
+        attributes.each do |k,v|
+          if k == :tag_content
+            node.content = v
+          else
+            node[k] = v
+          end
+        end
+        prepended_head << node
+      end
 
-prepended_head = Nokogiri::XML::Element.new 'head', rendered_html
-meta = Nokogiri::XML::Element.new 'meta', rendered_html
-  meta['name']    = "viewport"
-  meta['content'] = "user-scalable=no, width=device-width"
-title = Nokogiri::XML::Element.new 'title', rendered_html
-  title.content = @campaign.name
-style = Nokogiri::XML::Element.new 'style', rendered_html
-  style['type'] = "text/css"
-  style.content = "\n"
-  head_stylesheets.each do |ss|
-    # style.content += Compiler::Styles.render(ss.read)
-  end
-  style.content += "\n"
-
-prepended_head << meta
-prepended_head << title
-prepended_head << style
-
-rendered_html.children.first.add_previous_sibling(prepended_head)
-
-ap '-----------'
+      rendered_html.children.first.add_previous_sibling(prepended_head)
 
       rendered_html_string = rendered_html.to_html
-
+      rendered_html_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
 
 
       markup.cached_compilation = rendered_html_string
@@ -116,7 +107,7 @@ ap '-----------'
       markup.save
     end
     @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
-    @shl_rendered_html        = Compiler.syntax_highlight rendered_html, :html
+    @shl_rendered_html        = Compiler.syntax_highlight rendered_html_string, :html
   end
 
   def campaign_params
