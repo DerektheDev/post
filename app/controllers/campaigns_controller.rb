@@ -79,7 +79,12 @@ private
         title: { tag_content: @campaign.name },
         style: {
           type: 'text/css',
-          tag_content: "\n\n"
+          tag_content: (
+            head_stylesheets.map do |ss|
+              Compiler::Styles.render ss
+            end
+            combined_css.flatten[0].prepend("\n").concat("\n")
+          )
         }
       }
 
