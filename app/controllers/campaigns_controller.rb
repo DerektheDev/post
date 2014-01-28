@@ -53,64 +53,21 @@ private
     get_compiled_html @selected_markup
   end
 
-  def get_compiled_html markup
-    markup_file = File.new(markup.file.path)
-    if markup.cache_valid?
-      rendered_html = Nokogiri::HTML(markup.cached_compilation)
+  def get_compiled_html markup_record
+    markup_file = File.new(markup_record.file.path)
+    if markup_record.cache_valid?
+      rendered_html = Nokogiri::HTML(markup_record.cached_compilation)
     else
-      head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
-        File.new("public#{strip_query pca.file.url}") # pca = paperclip attachment
-      end
-      inline_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :inline).map do |pca|
-        File.new("public#{strip_query pca.file.url}")
-      end
+      inline_stylesheets = @campaign.style_files_for_markup(markup_record, :inline)
+      head_stylesheets = @campaign.style_files_for_markup(markup_record, :head)
       rendered_html = Compiler::Markup.render(markup_file, inline_stylesheets, head_stylesheets)
 
-
-      rendered_html[:xmlns] = "http://www.w3.org/1999/xhtml"
-
-      prepended_head = Nokogiri::XML::Element.new 'head', rendered_html
-      
-      head_hash = {
-        meta:  {
-          name: 'viewport',
-          content: 'user-scalable=no, width=device-width'
-        },
-        title: { tag_content: @campaign.name },
-        style: {
-          type: 'text/css',
-          tag_content: (
-            head_stylesheets.map{|ss|
-              ss.read
-            }.flatten[0].prepend("\n")
-          )
-        }
-      }
-
-      head_hash.each do |tag, attributes|
-        node = Nokogiri::XML::Element.new tag.to_s, rendered_html
-        attributes.each do |k,v|
-          if k == :tag_content
-            node.content = v
-          else
-            node[k] = v
-          end
-        end
-        prepended_head << node
-      end
-
-      rendered_html.children.first.add_previous_sibling(prepended_head)
-
-      rendered_html_string = rendered_html.to_html
-      rendered_html_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-      rendered_html = Nokogiri::HTML(rendered_html_string)
-
-      markup.cached_compilation = rendered_html_string
-      markup.cache_valid = true
-      markup.save
+      markup_record.cached_compilation = rendered_html.to_html
+      markup_record.cache_valid = true
+      markup_record.save
     end
     @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
-    @shl_rendered_html        = Compiler.syntax_highlight markup.cached_compilation, :html
+    @shl_rendered_html        = Compiler.syntax_highlight markup_record.cached_compilation, :html
   end
 
   def campaign_params

@@ -27,6 +27,46 @@ module Compiler
         self.apply_styles @tree_root, @tree_root, css_tree
       end
 
+      if head_stylesheets
+        @tree_root[:xmlns] = "http://www.w3.org/1999/xhtml"
+
+        prepended_head = Nokogiri::XML::Element.new 'head', @tree_root
+        
+        head_hash = {
+          meta:  {
+            name: 'viewport',
+            content: 'user-scalable=no, width=device-width'
+          },
+          # title: { tag_content: @campaign.name },
+          style: {
+            type: 'text/css',
+            tag_content: (
+              head_stylesheets.flatten.map{|ss|
+                ss.read
+              }.flatten[0].prepend("\n")
+            )
+          }
+        }
+
+        head_hash.each do |tag, attributes|
+          node = Nokogiri::XML::Element.new tag.to_s, @tree_root
+          attributes.each do |k,v|
+            if k == :tag_content
+              node.content = v
+            else
+              node[k] = v
+            end
+          end
+          prepended_head << node
+        end
+
+        @tree_root.children.first.add_previous_sibling(prepended_head)
+
+        tree_root_string = @tree_root.to_html
+        tree_root_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
+        @tree_root = Nokogiri::HTML(tree_root_string)
+      end
+
       output_markup = @tree_root
     end
 

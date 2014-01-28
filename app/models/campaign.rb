@@ -22,6 +22,13 @@ class Campaign < ActiveRecord::Base
     o
   end
 
+  def style_files_for_markup(markup_record, type)
+    stylesheets = ordered_stylesheets(File.basename(markup_record.file_file_name), type).map do |pca|
+      File.new("public#{pca.file.url[/[^?]+/]}") # pca = paperclip attachment
+    end
+    stylesheets
+  end
+
   def stylesheet_sorting_patterns markup_name, scope = "all"
     # ORDER OF COMPILATION/SPECIFICITY
     #   BODY:
