@@ -55,7 +55,7 @@ private
 
   def get_compiled_html markup
     markup_file = File.new(markup.file.path)
-    if markup.cache_valid? && 1==2
+    if markup.cache_valid?
       rendered_html = Nokogiri::HTML(markup.cached_compilation)
     else
       head_stylesheets = @campaign.ordered_stylesheets(File.basename(markup_file), :head).map do |pca|
@@ -103,15 +103,14 @@ private
 
       rendered_html_string = rendered_html.to_html
       rendered_html_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-
+      rendered_html = Nokogiri::HTML(rendered_html_string)
 
       markup.cached_compilation = rendered_html_string
-
       markup.cache_valid = true
       markup.save
     end
     @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
-    @shl_rendered_html        = Compiler.syntax_highlight rendered_html_string, :html
+    @shl_rendered_html        = Compiler.syntax_highlight markup.cached_compilation, :html
   end
 
   def campaign_params

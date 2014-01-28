@@ -57,6 +57,7 @@ class Campaign < ActiveRecord::Base
 
   def reset_cache
     resources.markups.each do |markup|
+      markup.cached_compilation = nil
       markup.cache_valid = false
       markup.save
     end
