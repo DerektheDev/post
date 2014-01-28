@@ -80,10 +80,9 @@ private
         style: {
           type: 'text/css',
           tag_content: (
-            head_stylesheets.map do |ss|
-              Compiler::Styles.render ss
-            end
-            combined_css.flatten[0].prepend("\n").concat("\n")
+            head_stylesheets.map{|ss|
+              ss.read
+            }.flatten[0].prepend("\n")
           )
         }
       }

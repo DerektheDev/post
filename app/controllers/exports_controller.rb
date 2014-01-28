@@ -14,7 +14,9 @@ class ExportsController < ApplicationController
 
     Zip::OutputStream.open(tmp_zip.path) do |z|
       markup_docs.each do |murecord|
-        z.put_next_entry murecord.file_file_name
+        markup_name_in  = murecord.file_file_name
+        markup_name_out = markup_name_in.split('.').first.concat('.html')
+        z.put_next_entry markup_name_out
         mu_file = File.new("public#{strip_query murecord.file.url}")
         ss_file = File.new("public#{strip_query stylesheets.first.file.url}")
         content = Compiler::Markup.render mu_file, ss_file
