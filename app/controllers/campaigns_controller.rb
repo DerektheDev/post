@@ -56,17 +56,21 @@ private
   def get_compiled_html markup_record
     markup_file = File.new(markup_record.file.path)
     if markup_record.cache_valid?
-      rendered_html = Nokogiri::HTML(markup_record.cached_compilation)
+      compiled_tree = Nokogiri::HTML(markup_record.cached_compilation)
     else
       inline_stylesheets = @campaign.style_files_for_markup(markup_record, :inline)
       head_stylesheets = @campaign.style_files_for_markup(markup_record, :head)
-      rendered_html = Compiler::Markup.render(markup_file, inline_stylesheets, head_stylesheets)
+      compiled_tree = Compiler::Markup.render(markup_file, inline_stylesheets, head_stylesheets)
 
-      markup_record.cached_compilation = rendered_html.to_html
+      # title = Nokogiri::XML::Element.new('title', compiled_tree)
+      # title.content = ""
+      # compiled_tree.children.first.add_previous_sibling(title)
+
+      markup_record.cached_compilation = compiled_tree.to_html
       markup_record.cache_valid = true
       markup_record.save
     end
-    @rendered_html_app_imgs   = Resource.app_relative_paths(rendered_html.dup, @campaign)
+    @rendered_html_app_imgs   = Resource.app_relative_paths(compiled_tree.dup, @campaign)
     @shl_rendered_html        = Compiler.syntax_highlight markup_record.cached_compilation, :html
   end
 
