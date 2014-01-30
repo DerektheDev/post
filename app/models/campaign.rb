@@ -1,5 +1,6 @@
 class Campaign < ActiveRecord::Base
 
+  belongs_to :client
   has_many :resources
 
   def ordered_stylesheets markup_name, scope = "all"

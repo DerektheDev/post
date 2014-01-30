@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140123214228) do
+ActiveRecord::Schema.define(version: 20140130205735) do
 
   create_table "campaigns", force: true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "client_id"
+    t.integer  "mpx_campaign_id"
+  end
+
+  create_table "clients", force: true do |t|
+    t.string   "name"
+    t.integer  "mpx_client_id"
+    t.integer  "mpx_site_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "hyperlinks", force: true do |t|
+    t.integer  "campaign_id"
+    t.integer  "mpx_link_id"
+    t.string   "destination"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
