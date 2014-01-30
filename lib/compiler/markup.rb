@@ -13,6 +13,54 @@ module Compiler
       tree
     end
 
+    def self.apply_head_tag document, *head_stylesheets
+      head_tag = if document.xpath("//head").present?
+        head_already_existed = true
+        document.xpath("//head").first
+      else
+        Nokogiri::XML::Element.new('head', document)
+      end
+      
+      head_hash = {
+        meta:  {
+          name: 'viewport',
+          content: 'user-scalable=no, width=device-width'
+        },
+        # title: { tag_content: @campaign.name },
+      }
+
+      if head_stylesheets
+        head_hash[:style] = {
+          type: 'text/css',
+          tag_content: (
+            head_stylesheets.flatten.map{|ss|
+              ss.read
+            }.flatten[0].prepend("\n")
+          )
+        }
+      end
+
+      head_hash.each do |tag, attributes|
+        node = Nokogiri::XML::Element.new tag.to_s, document
+        attributes.each do |k,v|
+          if k == :tag_content
+            node.content = v
+          else
+            node[k] = v
+          end
+        end
+        head_tag << node
+      end
+
+      unless head_already_existed
+        document.children.first.add_previous_sibling(head_tag)
+      end
+
+      tree_root_string = document.to_html
+      tree_root_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
+      document = Nokogiri::HTML(tree_root_string)
+    end
+
     def self.render markup_file, inline_stylesheets, *head_stylesheets
 
       tree = self.build_tree markup_file
@@ -20,57 +68,21 @@ module Compiler
       # @tree_root = tree.root.children.first # skips straight to inside body tag
       @tree_root = tree.root
 
-      # apply the styles for each stylesheet, in the
-      # order in which they are passed
+      # inline the stylesheets specified as such,
+      # in the order in which they are passed
       inline_stylesheets.each do |ss|
         css_tree = Compiler::Styles.build_tree ss
-        self.apply_styles @tree_root, @tree_root, css_tree
+        self.apply_inline_styles @tree_root, @tree_root, css_tree
       end
 
-      if head_stylesheets
-        @tree_root[:xmlns] = "http://www.w3.org/1999/xhtml"
+      @tree_root[:xmlns] = "http://www.w3.org/1999/xhtml"
 
-        prepended_head = Nokogiri::XML::Element.new 'head', @tree_root
-        
-        head_hash = {
-          meta:  {
-            name: 'viewport',
-            content: 'user-scalable=no, width=device-width'
-          },
-          # title: { tag_content: @campaign.name },
-          style: {
-            type: 'text/css',
-            tag_content: (
-              head_stylesheets.flatten.map{|ss|
-                ss.read
-              }.flatten[0].prepend("\n")
-            )
-          }
-        }
-
-        head_hash.each do |tag, attributes|
-          node = Nokogiri::XML::Element.new tag.to_s, @tree_root
-          attributes.each do |k,v|
-            if k == :tag_content
-              node.content = v
-            else
-              node[k] = v
-            end
-          end
-          prepended_head << node
-        end
-
-        @tree_root.children.first.add_previous_sibling(prepended_head)
-
-        tree_root_string = @tree_root.to_html
-        tree_root_string.prepend "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"
-        @tree_root = Nokogiri::HTML(tree_root_string)
-      end
+      self.apply_head_tag @tree_root, head_stylesheets
 
       output_markup = @tree_root
     end
 
-    def self.apply_styles tree, branch, css_tree
+    def self.apply_inline_styles tree, branch, css_tree
 
       branch.children.each do |node|
         if node.class == Nokogiri::XML::Element
@@ -118,7 +130,7 @@ module Compiler
 
           # move down the Nokogiri DOM tree
           unless node.children.empty?
-            apply_styles tree, node, css_tree
+            self.apply_inline_styles tree, node, css_tree
           end
         end
       end
